@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pizza Planet</title>
+</head>
+
+<body class="bg-slate-100">
+    <div id="app" class="flex h-screen flex-col items-center justify-between py-8 text-center text-[#2c3e50] selection:bg-green-100">
+        <div>
+            <h1 class="bg-gradient-to-r from-red-800 to-red-400
+          bg-clip-text text-5xl font-black text-transparent
+           selection:bg-transparent drop-shadow-lg">
+                Welcome to Pizza Planet
+            </h1>
+        </div>
+        <div class="borde w-screen h-screen flex justify-center items-center">
+            <div>
+                <p class="text-3xl drop-shadow-md text-gray-800">Place your order!</p>
+                <div class="justify-center">
+                    <div class="mb-3 xl:w-96">
+                        <label for="exampleFormControlInput1" class="p-3 form-label inline-block mb-2 text-gray-700 text-md font-semibold">Full Name</label
+                      >
+                      <input
+                        type="text"
+                        class="
+                          form-control
+                          block
+                          w-full
+                          px-3
+                          py-1.5
+                          text-base
+                          font-normal
+                          text-gray-700
+                          bg-white bg-clip-padding
+                          border border-solid border-gray-300
+                          rounded
+                          transition
+                          ease-in-out
+                          m-0
+                          focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none
+                        "
+                        id="exampleFormControlInput1"
+                        placeholder="Name"
+                      />
+                    </div>
+                    <p class="text-gray-700 text-md font-bold p-4">Crust Type</p>
+                    <div class="hand-tossed">
+                        <input class="form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" type="radio" name="flexRadioDefault" id="hand-tossed" checked>
+                        <label class="form-check-label inline-block text-gray-800" for="flexRadioDefault1">
+                          Hand Tossed
+                        </label>
+                    </div>
+                    <div class="pan-crust">
+                        <input class="form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
+                            type="radio" name="flexRadioDefault" id="pan-crust">
+                        <label class="form-check-label inline-block text-gray-800" for="flexRadioDefault2">
+                          Pan Crust
+                        </label>
+                    </div>
+                    <div class="ny-crust">
+                        <input class="form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
+                            type="radio" name="flexRadioDefault" id="flexRadioDefault2">
+                        <label class="form-check-label inline-block text-gray-800" for="flexRadioDefault2">
+                          NY Crust
+                        </label>
+                    </div>
+                    <p class="text-gray-700 font-bold p-4 text-md">Toppings</p>
+                    <div class="toppings">
+                        <div class="pepperoni">
+                            <input class="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
+                                type="checkbox" value="" id="flexCheckDefault">
+                            <label class="form-check-label inline-block text-gray-800" for="flexCheckDefault">
+                            Pepperoni
+                          </label>
+                        </div>
+                        <div class="spicy-sausage">
+                            <input class="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
+                                type="checkbox" value="" id="spicy">
+                            <label class="form-check-label inline-block text-gray-800" for="flexCheckChecked">
+                            Spicy Sausage
+                          </label>
+                        </div>
+                        <div class="sausage">
+                            <input class="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
+                                type="checkbox" value="" id="flexCheckChecked">
+                            <label class="form-check-label inline-block text-gray-800" for="flexCheckChecked">
+                            Sausage
+                          </label>
+                        </div>
+                        <div class="mushroom">
+                            <input class="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
+                                type="checkbox" value="" id="flexCheckChecked">
+                            <label class="form-check-label inline-block text-gray-800" for="flexCheckChecked">
+                            Mushroom
+                          </label>
+                        </div>
+                    </div>
+                    <p class="text-gray-700 text-md font-bold p-4">Size</p>
+                    <div class="sm">
+                        <input class="form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
+                            type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                        <label class="form-check-label inline-block text-gray-800" for="flexRadioDefault1">
+                          Small
+                        </label>
+                    </div>
+                    <div class="md">
+                        <input class="form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
+                            type="radio" name="flexRadioDefault" id="flexRadioDefault2">
+                        <label class="form-check-label inline-block text-gray-800" for="flexRadioDefault2">
+                          Medium
+                        </label>
+                    </div>
+                    <div class="large">
+                        <input class="form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
+                            type="radio" name="flexRadioDefault" id="flexRadioDefault2">
+                        <label class="form-check-label inline-block text-gray-800" for="flexRadioDefault2">
+                          Large
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="./src/main.js"></script>
+</body>
+
+</html>
