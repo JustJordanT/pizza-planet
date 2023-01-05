@@ -1,4 +1,4 @@
-# pizza-planet
-Pizza Planet Application 🍕 🛻
+# pizza-planet-modern-monolith
+Pizza Planet Modern Monolith Application 🍕 🛻
 
-![image](https://user-images.githubusercontent.com/38886930/200149642-e934e9ae-0556-4212-9bd4-d4c5f4e4fe84.png)
+![image](https://user-images.githubusercontent.com/38886930/210684666-03c3544f-a177-48ec-8cf5-f16da8a2c0b0.png)
