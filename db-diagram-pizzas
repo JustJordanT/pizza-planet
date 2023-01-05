@@ -1,0 +1,47 @@
+Table pizzas {
+  id string [primary key]
+  crustType string
+  size string
+  price int
+  toppings string[]
+  isGultenFree bool
+  isVegan bool
+  isvegetarian bool
+  quantity int
+  createdAt datetime
+  updatedAt datetime
+}
+
+Table orders {
+  id            string [primary key]
+  cart_id       int
+  order_status  string
+  createdAt     datetime
+  updatedAt     datetime
+}
+
+Table cart {
+  id          string [primary key]
+  pizza_ids   int[]
+  price       decimal
+  quantity    int
+  customer_id int
+  isActive    bool
+  createdAt   datetime
+  updatedAt   datetime
+}
+
+Table customer {
+  id        string [primary key]
+  name      string
+  email     string [unique]
+  password  string
+  createdAt datetime
+  updatedAt datetime
+}
+
+Ref: "pizzas"."id" < "cart"."pizza_ids"
+
+Ref: "cart"."customer_id" < "customer"."id"
+
+Ref: "cart"."id" < "orders"."cart_id"
