@@ -1,4 +1,6 @@
 using PizzaPlanet.API.Context;
+using PizzaPlanet.API.Services;
+using PizzaPlanet.API.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +26,11 @@ builder.Services.AddCors(options =>
 builder.Services.AddSingleton<MongoDbContext>(new MongoDbContext(
     builder.Configuration["MongoDatabase:ConnectionString"],
     builder.Configuration["MongoDatabase:DatabaseName"]));
+
+
+// Repository Pattern
+builder.Services.AddSingleton<IPizzaRepository, PizzasRepository>();
+
 
 var app = builder.Build();
 

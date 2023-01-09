@@ -7,7 +7,7 @@ namespace PizzaPlanet.API.Entities;
 public class PizzasEntity
 {
     [BsonId, BsonRepresentation(BsonType.ObjectId)]
-    public string Id { get; set; }
+    public string Id { get; init; }
     [BsonElement("crustType")] 
     public string CrustType { get; init; }
     [BsonElement("size")] 
@@ -17,17 +17,17 @@ public class PizzasEntity
     [BsonElement("toppings")] 
     public IEnumerable<string> Toppings { get; init; }
     [BsonElement("isGlutenFree")]
-    public bool IsGlutenFree { get; set; }
+    public bool IsGlutenFree { get; init; }
     [BsonElement("isVegan")]
-    public bool IsVegan { get; set; }
+    public bool IsVegan { get; init; }
     [BsonElement("isVegetarian")]
-    public bool IsVegetarian { get; set; }
+    public bool IsVegetarian { get; init; }
     [BsonElement("quantity")]
-    public int Quantity { get; set; }
+    public int Quantity { get; init; }
 
     [BsonElement("createdAt")]
     [BsonIgnoreIfDefault, BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
     [BsonElement("updatedAt")] 
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow; 
 }

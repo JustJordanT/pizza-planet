@@ -6,6 +6,8 @@ using PizzaPlanet.API.Commons;
 using PizzaPlanet.API.Context;
 using PizzaPlanet.API.Entities;
 using PizzaPlanet.API.Models;
+using PizzaPlanet.API.Services;
+using PizzaPlanet.API.Services.Interfaces;
 
 namespace PizzaPlanet.API.Controllers;
 
@@ -14,63 +16,69 @@ namespace PizzaPlanet.API.Controllers;
 public class PizzaController : ControllerBase
 {
     private readonly MongoDbContext _mongoDbContext;
+    private readonly IPizzaRepository _pizzasRepository;
 
-    public PizzaController(MongoDbContext mongoDbContext)
+    public PizzaController(MongoDbContext mongoDbContext, IPizzaRepository pizzasRepository)
     {
-        _mongoDbContext = mongoDbContext;
+        _mongoDbContext = mongoDbContext ?? throw new ArgumentNullException(nameof(mongoDbContext));
+        _pizzasRepository = pizzasRepository ?? throw new ArgumentNullException(nameof(pizzasRepository));
     }
 
     [HttpGet("{id}")]
-    public ActionResult GetPizzaById(string id)
+    public async Task<ActionResult> GetPizzaById(string id)
     {
-        var orders = _mongoDbContext.GetCollection<PizzasEntity>("pizzas");
-        var filteredById = Builders<PizzaModel>.Filter.Eq("_id",ObjectId.Parse(id));
-        return Ok(filteredById);
+        var filtered = await _pizzasRepository.GetPizzasByIdAsync(id);
+        if (filtered == null)
+        {
+            return NotFound($"A item with id of: {id}; was not found, please try again");
+        }
+        return Ok(filtered);
     }
 
     [HttpGet]
-    public ActionResult<GetPizzaModel> GetPizzas([FromQuery] int count = 10)
+    public async Task<ActionResult<GetPizzaModel>> GetPizzas(CancellationToken cancellationToken)
     {
-        var orders = _mongoDbContext.GetCollection<PizzasEntity>("pizzas");
-        var pizzas = orders.Find(_ => true);
+        // var orders = _mongoDbContext.GetCollection<PizzasEntity>("pizzas");
+        // var pizzas = orders.Find(_ => true).ToList();
         
-        return Ok(pizzas.ToList().Take(count));
+        var pizzas = await _pizzasRepository.GetAllPizzasAsync(cancellationToken);
         
-
+        return Ok(pizzas);
     }
 
     [HttpPost]
     public ActionResult CreatePizza([FromBody] PizzaModel pizza)
     {
-        var orders = _mongoDbContext.GetCollection<PizzasEntity>("pizzas");
-        orders.InsertOne(Mappers.PizzaModelToPizzasEntity(pizza));
+        if (pizza == null)
+        {
+            return BadRequest();
+        }
+
+        _pizzasRepository.CreatePizzaAsync(pizza, new CancellationToken());
         return Created("", pizza);
     }
-
+    
     [HttpPut("{id}")]
     public ActionResult UpdatePizza(string id, [FromBody] PutPizzaModel pizza)
     {
-        var orders = _mongoDbContext.GetCollection<PizzasEntity>("pizzas");
-        // var pizzas = orders.Find(c => c.Id == id);
-        // orders.UpdateOne(c =);
+        // if (pizza.Id == null)
+        // {
+        //     return BadRequest();
+        // }
         
-        // Define the filter
-        var filter = Builders<PizzasEntity>.Filter.Eq("_id", ObjectId.Parse(id));
-        // Preserve CreatedAt date timestamp to pass through mapper.
-        var date = orders.Find(filter).FirstOrDefault();
-
-        // Update the document
-        orders.ReplaceOne(filter, Mappers.PutPizzaModelToPizzasEntity(pizza, date.CreatedAt));
+        _pizzasRepository.UpdatePizzaAsync(id, pizza, new CancellationToken());
         
         return NoContent();
     }
 
-    [HttpDelete]
-    public ActionResult DeletePizza([FromQuery] string Id)
+    [HttpDelete("{id}")]
+    public ActionResult DeletePizza(string id)
     {
-        var orders = _mongoDbContext.GetCollection<PizzaModel>("pizzas");
-        var filteredById = Builders<PizzaModel>.Filter.Eq("_id", ObjectId.Parse(Id));
-        orders.DeleteOne(filteredById);
+        var deleted = _pizzasRepository.DeletePizzaAsync(id, new CancellationToken());
+        if (deleted == null)
+        {
+            return NotFound($"A item with id of: {id}; was not found, please try again");
+        }
         return NoContent();
     }
 }
