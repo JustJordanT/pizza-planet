@@ -8,7 +8,7 @@ namespace PizzaPlanet.API.Models;
 
 public record PutPizzaModel
 {
-    [Required(ErrorMessage = "Id is present, please provide a valid id")]
+    // [Required(ErrorMessage = "Id is present, please provide a valid id")]
     public string Id { get; set; }
     public string CrustType { get; init; }
     public string Size { get; init; }

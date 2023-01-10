@@ -8,7 +8,7 @@ public record GetPizzaModel
 {
     public string Id { get; set; }
     public string CrustType { get; init; }
-    public string Size { get; init; }
+    public  string Size { get; init; }
     public decimal Price { get; init; }
     public IEnumerable<string> Toppings { get; init; }
     public bool IsGlutenFree { get; set; }
