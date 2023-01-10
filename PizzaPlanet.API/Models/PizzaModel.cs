@@ -1,12 +1,16 @@
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using PizzaPlanet.API.Commons;
 
 namespace PizzaPlanet.API.Models;
 
 public record PizzaModel
 {
+    [RegularExpression(PropertyRegex.CrustType)]
     public string CrustType { get; init; }
+    [RegularExpression(PropertyRegex.Size, ErrorMessage = "Size must be, L, M, or S")]
     public string Size { get; init; }
     public decimal Price { get; init; } 
     public IEnumerable<string> Toppings { get; init; }
