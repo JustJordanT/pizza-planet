@@ -16,7 +16,6 @@ public class Mappers
       {
          CrustType = pizzaModel.CrustType,
          Size = pizzaModel.Size,
-         Price = pizzaModel.Price,
          Toppings = pizzaModel.Toppings,
          IsGlutenFree = pizzaModel.IsGlutenFree,
          IsVegan = pizzaModel.IsVegan,
@@ -34,7 +33,6 @@ public class Mappers
          Id = putPizzaModel.Id,
          CrustType = putPizzaModel.CrustType,
          Size = putPizzaModel.Size,
-         Price = putPizzaModel.Price,
          Toppings = putPizzaModel.Toppings,
          IsGlutenFree = putPizzaModel.IsGlutenFree,
          IsVegan = putPizzaModel.IsVegan,
@@ -63,24 +61,6 @@ public class Mappers
       
       return passedEntity;
    }
-
-   public static object PizzasEntityToPizzasModelMongo(IFindFluent<PizzasEntity, PizzasEntity> pizzasEntity)
-   {
-      var tmp = BsonClassMap.RegisterClassMap<PizzasEntity>(p =>
-      {
-         // p.AutoMap();
-         p.MapIdProperty(c => c.Id).SetElementName("_id");
-         p.MapProperty(c => c.CrustType).SetElementName("crustType");
-         p.MapProperty(c => c.Size).SetElementName("size");
-         p.MapProperty(c => c.Price).SetElementName("price");
-         p.MapProperty(c => c.Toppings).SetElementName("toppings");
-         p.MapProperty(c => c.IsGlutenFree).SetElementName("isGlutenFree");
-         p.MapProperty(c => c.IsVegan).SetElementName("isVegan");
-         p.MapProperty(c => c.IsVegetarian).SetElementName("isVegetarian");
-         p.MapProperty(c => c.Quantity).SetElementName("quantity");
-         // var bson = model.ToBson();
-         // var entity = BsonSerializer.Deserialize<Entity>(bson);
-      });
-      return tmp;
-   }
+   
+   
 }

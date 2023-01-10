@@ -6,13 +6,13 @@ using PizzaPlanet.API.Commons;
 
 namespace PizzaPlanet.API.Models;
 
-public record PizzaModel
+public class PizzaModel
 {
     [RegularExpression(PropertyRegex.CrustType)]
     public string CrustType { get; init; }
     [RegularExpression(PropertyRegex.Size, ErrorMessage = "Size must be, L, M, or S")]
     public string Size { get; init; }
-    public decimal Price { get; init; } 
+
     public IEnumerable<string> Toppings { get; init; }
     public bool IsGlutenFree { get; set; }
     public bool IsVegan { get; set; }
