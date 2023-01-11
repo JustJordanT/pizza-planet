@@ -15,3 +15,21 @@ Pizza Planet Modern Monolith Application 🍕 🛻
 - [BCrypt - for encrypting passwords at rest](https://www.nuget.org/packages/BCrypt.Net-Next)
 - [MongoDB](https://www.mongodb.com/)
 - [JWT customer token generation](https://jwt.io/)
+
+## User Flow
+
+1. A customer opens the app or website and they are able to submit a pizza to their cart for there order.
+
+2. The customer selects one or more pizzas to add to their cart.
+
+3. The customer can view their cart and make any necessary adjustments to their order before proceeding to checkout.
+
+4. The customer enters their shipping information and selects a payment method to complete their order.
+
+5. The order is then sent to the kitchen for preparation, and a unique order ID is generated.
+
+6. The customer receives a notification that their order has been received and is being prepared.
+
+7. Once the order is ready, it is sent for delivery to the customer's specified address.
+
+8. The customer receives their order and an invoice with the order details and total cost.
