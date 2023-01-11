@@ -6,7 +6,7 @@ using PizzaPlanet.API.Commons;
 
 namespace PizzaPlanet.API.Models;
 
-public class PizzaModel
+public class CreatePizzaModel
 {
     [RegularExpression(PropertyRegex.CrustType)]
     public string CrustType { get; init; }

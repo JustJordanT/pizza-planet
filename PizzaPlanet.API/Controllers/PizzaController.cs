@@ -44,15 +44,15 @@ public class PizzaController : ControllerBase
     }
 
     [HttpPost]
-    public ActionResult CreatePizza([FromBody] PizzaModel pizza)
+    public ActionResult CreatePizza([FromBody] CreatePizzaModel createPizza)
     {
-        if (pizza == null)
+        if (createPizza == null)
         {
             return BadRequest();
         }
 
-        _pizzasRepository.CreatePizzaAsync(pizza, new CancellationToken());
-        return Created("", pizza);
+        _pizzasRepository.CreatePizzaAsync(createPizza, new CancellationToken());
+        return Created("", createPizza);
     }
     
     [HttpPut("{id}")]

@@ -10,7 +10,7 @@ public interface IPizzaRepository
     Task<List<PizzasEntity>> GetAllPizzasAsync(CancellationToken cancellationToken);
     Task<List<PizzasEntity>> GetPizzasByIdAsync(string id);
 
-    Task CreatePizzaAsync(PizzaModel pizzaModel, CancellationToken cancellationToken);
+    Task CreatePizzaAsync(CreatePizzaModel createPizzaModel, CancellationToken cancellationToken);
     
     Task UpdatePizzaAsync(string id ,PutPizzaModel putPizzaModel, CancellationToken cancellationToken);
     

@@ -8,19 +8,19 @@ using PizzaPlanet.API.Models;
 
 namespace PizzaPlanet.API.Commons;
 
-public class Mappers
+public abstract class Mappers
 {
-   public static PizzasEntity PizzaModelToPizzasEntity(PizzaModel pizzaModel)
+   public static PizzasEntity CreatePizzaModelToPizzasEntity(CreatePizzaModel createPizzaModel)
    {
       var passedModel = new PizzasEntity
       {
-         CrustType = pizzaModel.CrustType,
-         Size = pizzaModel.Size,
-         Toppings = pizzaModel.Toppings,
-         IsGlutenFree = pizzaModel.IsGlutenFree,
-         IsVegan = pizzaModel.IsVegan,
-         IsVegetarian = pizzaModel.IsVegetarian,
-         Quantity = pizzaModel.Quantity,
+         CrustType = createPizzaModel.CrustType,
+         Size = createPizzaModel.Size,
+         Toppings = createPizzaModel.Toppings,
+         IsGlutenFree = createPizzaModel.IsGlutenFree,
+         IsVegan = createPizzaModel.IsVegan,
+         IsVegetarian = createPizzaModel.IsVegetarian,
+         Quantity = createPizzaModel.Quantity,
       };
       
       return passedModel;
@@ -44,23 +44,35 @@ public class Mappers
       return passedModel;
    }
 
-   public static GetPizzaModel PizzasEntityToPizzasModel(PizzasEntity pizzasEntity)
+   // TODO Was having issues mapping this one with mongoDB, I was trying to remove the timestamp from the model.
+   // public static GetPizzaModel PizzasEntityToPizzasModel(PizzasEntity pizzasEntity)
+   // {
+   //    var passedEntity = new GetPizzaModel
+   //    {
+   //       Id = pizzasEntity.Id,
+   //       CrustType = pizzasEntity.CrustType,
+   //       Size = pizzasEntity.Size,
+   //       Price = pizzasEntity.Price,
+   //       Toppings = pizzasEntity.Toppings,
+   //       IsGlutenFree = pizzasEntity.IsGlutenFree,
+   //       IsVegan = pizzasEntity.IsVegan,
+   //       IsVegetarian = pizzasEntity.IsVegetarian,
+   //       Quantity = pizzasEntity.Quantity,
+   //    };
+   //    
+   //    return passedEntity;
+   // }
+
+   public static CustomerEntity CreateCustomerToCustomerEntity(CreateCustomer customer,string passwordCrypt ,string hash, string salt)
    {
-      var passedEntity = new GetPizzaModel
+      var passedCustomer = new CustomerEntity
       {
-         Id = pizzasEntity.Id,
-         CrustType = pizzasEntity.CrustType,
-         Size = pizzasEntity.Size,
-         Price = pizzasEntity.Price,
-         Toppings = pizzasEntity.Toppings,
-         IsGlutenFree = pizzasEntity.IsGlutenFree,
-         IsVegan = pizzasEntity.IsVegan,
-         IsVegetarian = pizzasEntity.IsVegetarian,
-         Quantity = pizzasEntity.Quantity,
+         Name = customer.Name,
+         Email = customer.Email,
+         Password = passwordCrypt, 
+         PasswordHash = hash,
+         PasswordSalt = salt
       };
-      
-      return passedEntity;
+      return passedCustomer;
    }
-   
-   
 }

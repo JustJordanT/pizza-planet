@@ -33,9 +33,10 @@ builder.Services.AddSingleton<MongoDbContext>(new MongoDbContext(
     builder.Configuration["MongoDatabase:ConnectionString"],
     builder.Configuration["MongoDatabase:DatabaseName"]));
 
-
 // Repository Pattern
 builder.Services.AddSingleton<IPizzaRepository, PizzasRepository>();
+builder.Services.AddSingleton<ICustomerRepository, CustomerRepository>();
+builder.Services.AddSingleton<IAuthenticationRepository, AuthenticationRepository>();
 
 // Validators
 // builder.Services.AddFluentValidation(c => c.RegisterValidatorsFromAssemblies(Assembly.GetExecutingAssembly()));

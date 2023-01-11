@@ -3,10 +3,11 @@ using PizzaPlanet.API.Models;
 
 namespace PizzaPlanet.API.Commons.Validators;
 
-public class PostRequestValidation : AbstractValidator<PizzaModel>
+public class PutPizzaRequestValidation : AbstractValidator<PutPizzaModel>
 {
-    public PostRequestValidation()
+    public PutPizzaRequestValidation()
     {
+        RuleFor(p => p.Id).NotEmpty().WithMessage("Please ensure that you have a valid id");;
         RuleFor(p => p.Size).NotEmpty().WithMessage("Please ensure that you have entered a valid size");
         RuleFor(p => p.CrustType).NotEmpty().WithMessage("Please ensure that you have entered a valid crust type");;
         RuleFor(p => p.Toppings).NotEmpty().WithMessage("Please ensure that you have added toppings to this collection");

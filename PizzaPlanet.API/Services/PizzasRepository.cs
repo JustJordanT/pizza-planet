@@ -36,10 +36,10 @@ public class PizzasRepository : IPizzaRepository
         return await pizza.ToListAsync();
     }
 
-    public async Task CreatePizzaAsync(PizzaModel pizzaModel,CancellationToken cancellationToken)
+    public async Task CreatePizzaAsync(CreatePizzaModel createPizzaModel,CancellationToken cancellationToken)
     {
         // var orders = _mongoDbContext.GetCollection<PizzasEntity>("pizzas");
-        await MongoCollection.InsertOneAsync(Mappers.PizzaModelToPizzasEntity(pizzaModel), cancellationToken: cancellationToken);
+        await MongoCollection.InsertOneAsync(Mappers.CreatePizzaModelToPizzasEntity(createPizzaModel), cancellationToken: cancellationToken);
     }
 
     public async Task UpdatePizzaAsync(string id ,PutPizzaModel putPizzaModel, CancellationToken cancellationToken)
