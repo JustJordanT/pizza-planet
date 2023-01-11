@@ -12,5 +12,6 @@ Pizza Planet Modern Monolith Application 🍕 🛻
 ## Tech Stack
 
 - [FluentValidation](https://docs.fluentvalidation.net/en/latest/index.html)
-- BCrypt
-- MongoDB
+- [BCrypt - for encrypting passwords at rest](https://www.nuget.org/packages/BCrypt.Net-Next)
+- [MongoDB](https://www.mongodb.com/)
+- [JWT customer token generation](https://jwt.io/)
