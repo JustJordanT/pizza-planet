@@ -7,7 +7,7 @@ Pizza Planet Modern Monolith Application 🍕 🛻
 <img width="1099" alt="image" src="https://user-images.githubusercontent.com/38886930/210846101-8af1aafb-a7f0-4f4c-a6b9-13dfe919cfa6.png">
 
 ## DB Diagram of Pizzas Planet
-<img width="883" alt="image" src="https://user-images.githubusercontent.com/38886930/211625398-07555362-de8c-4398-802c-7c5d5541ca97.png">
+<img width="867" alt="image" src="https://user-images.githubusercontent.com/38886930/211888116-85f63990-15ba-4837-8d46-7f94c1407b1a.png">
 
 ## Tech Stack
 
