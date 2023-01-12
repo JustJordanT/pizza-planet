@@ -11,6 +11,7 @@ Pizza Planet Modern Monolith Application 🍕 🛻
 
 ## Tech Stack
 
+- [ASP.NET](https://dotnet.microsoft.com/en-us/apps/aspnet)
 - [FluentValidation](https://docs.fluentvalidation.net/en/latest/index.html)
 - [BCrypt - for encrypting passwords at rest](https://www.nuget.org/packages/BCrypt.Net-Next)
 - [MongoDB](https://www.mongodb.com/)
@@ -18,18 +19,20 @@ Pizza Planet Modern Monolith Application 🍕 🛻
 
 ## User Flow
 
-1. A customer opens the app or website and they are able to submit a pizza to their cart for there order.
+- Customers start by browsing the menu of pizzas available through the API. 
+- They can filter or search for specific pizzas, and view details about each one.
+- Once the customer has decided on the pizzas they want to order, they add them to their cart. 
+- The cart is connected to their account, so they can save it for later or come back to it.
+- Next, the customer reviews the items in their cart and can make changes if needed. Once they're satisfied, they proceed to checkout.
+- During checkout, the customer make the payment, the order get confirm and they receive the confirmation
 
-2. The customer selects one or more pizzas to add to their cart.
+```mermaid
+graph TD;
+    Customers-->|browse menu|Pizzas;
+    Pizzas-->|add to cart|Cart;
+    Cart-->|review and edit|Cart;
+    Cart-->|checkout|Orders;
+    Orders-->|Payment| Orders;
+    Orders-->|Confirmation|Customers;
+```
 
-3. The customer can view their cart and make any necessary adjustments to their order before proceeding to checkout.
-
-4. The customer enters their shipping information and selects a payment method to complete their order.
-
-5. The order is then sent to the kitchen for preparation, and a unique order ID is generated.
-
-6. The customer receives a notification that their order has been received and is being prepared.
-
-7. Once the order is ready, it is sent for delivery to the customer's specified address.
-
-8. The customer receives their order and an invoice with the order details and total cost.
