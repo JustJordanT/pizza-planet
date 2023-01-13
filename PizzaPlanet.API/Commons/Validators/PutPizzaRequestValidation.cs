@@ -7,7 +7,6 @@ public class PutPizzaRequestValidation : AbstractValidator<PutPizzaModel>
 {
     public PutPizzaRequestValidation()
     {
-        RuleFor(p => p.Id).NotEmpty().WithMessage("Please ensure that you have a valid id");;
         RuleFor(p => p.Size).NotEmpty().WithMessage("Please ensure that you have entered a valid size");
         RuleFor(p => p.CrustType).NotEmpty().WithMessage("Please ensure that you have entered a valid crust type");;
         RuleFor(p => p.Toppings).NotEmpty().WithMessage("Please ensure that you have added toppings to this collection");

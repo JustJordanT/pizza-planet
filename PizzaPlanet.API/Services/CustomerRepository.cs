@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using PizzaPlanet.API.Commons;
@@ -13,36 +14,52 @@ public class CustomerRepository : ICustomerRepository
 {
     private readonly MongoDbContext _mongoDbContext;
     private readonly IAuthenticationRepository _authenticationRepository;
+    private readonly PgSqlContext _pgSqlContext;
+    private readonly ICustomerRepository _customerRepository;
 
     private IMongoCollection<CustomerEntity> MongoCollection => _mongoDbContext.GetCollection<CustomerEntity>("customers");
 
 
-    public CustomerRepository(MongoDbContext mongoDbContext, IAuthenticationRepository authenticationRepository)
+    public CustomerRepository(
+        MongoDbContext mongoDbContext,
+        IAuthenticationRepository authenticationRepository,
+        PgSqlContext pgSqlContext)
     {
         _mongoDbContext = mongoDbContext ?? throw new ArgumentNullException(nameof(mongoDbContext));
         _authenticationRepository = authenticationRepository ?? throw new ArgumentNullException(nameof(authenticationRepository));
+        _pgSqlContext = pgSqlContext ?? throw new ArgumentNullException(nameof(pgSqlContext));
     }
 
     public async Task CreateCustomerAsync(CreateCustomer customer, CancellationToken cancellationToken)
     {
         // _authenticationRepository.CreatePasswordHash(customer.Password, out var passwordHash, out var passwordSalt);
-        _authenticationRepository.CreatePasswordCrypt(customer.Password,out var passwordCrypt, out var passwordHash, out var passwordSalt);
+        _authenticationRepository.CreatePasswordCrypt(
+            customer.Password,
+            out var passwordCrypt,
+            out var passwordHash,
+            out var passwordSalt);
         // var user = Mappers.CreateCustomerToCustomerEntity(customer, passwordHash, passwordSalt);
         // await MongoCollection.InsertOneAsync(Mappers.CreateCustomerToCustomerEntity(customer, passwordHash, passwordSalt), cancellationToken: cancellationToken);
-        await MongoCollection.InsertOneAsync(Mappers.CreateCustomerToCustomerEntity(customer, passwordCrypt,passwordHash, passwordSalt), cancellationToken: cancellationToken);
+        await _pgSqlContext.CustomerEntity.AddAsync(
+            Mappers.CreateCustomerToCustomerEntity(
+                customer,
+                passwordCrypt,
+                passwordHash,
+                passwordSalt)
+            , cancellationToken: cancellationToken);
+        await _pgSqlContext.SaveChangesAsync(cancellationToken);
     }
 
     public async Task<bool> GetCustomerByEmail(string email)
     {
         // var emailCheck = await MongoCollection.Find(_ => _.Email == email).AnyAsync();
-        return await MongoCollection.Find(_ => _.Email == email).AnyAsync();
+        return await _pgSqlContext.CustomerEntity.AnyAsync(c => c.Email == email);
     }
 
     public async Task<bool> VerifyCustomerPassword(string email, string password)
     {
-        var filter = Builders<CustomerEntity>.Filter.Eq("email", email);
-        var user = await MongoCollection.Find(filter).FirstOrDefaultAsync();
-
+        var user = await _pgSqlContext.CustomerEntity.FirstOrDefaultAsync(c => c.Email == email); 
+        
         return await _authenticationRepository.VerifyPassword(password, user.Password);
     }
 
@@ -51,4 +68,54 @@ public class CustomerRepository : ICustomerRepository
         return _authenticationRepository.GenerateJwtToken(customer);
     }
 
+    public async Task<List<CustomerEntity>> GetCustomersAsync(CancellationToken cancellationToken)
+    {
+        return await _pgSqlContext.CustomerEntity.ToListAsync(cancellationToken);
+    }
+
+    public async Task<CustomerEntity> GetCustomersByIdAsync(string id, CancellationToken cancellationToken)
+    {
+        var customerCheck = await _pgSqlContext.CustomerEntity.AnyAsync(c => c.Id == id, cancellationToken: cancellationToken);
+
+        if (!customerCheck) return null; 
+        return await _pgSqlContext.CustomerEntity.FirstOrDefaultAsync(c => c.Id == id, cancellationToken);       
+    }
+    
+    // TODO put not working... idcheck is always returning false
+    public async Task<CustomerEntity> PutCustomersAsync(string id, PutCustomerModel putCustomerModel,
+        CancellationToken cancellationToken)
+    {
+        _authenticationRepository.CreatePasswordCrypt(
+            putCustomerModel.Password,
+            out var passwordCrypt,
+            out var passwordHash,
+            out var passwordSalt);
+        // Preserve CreatedAt date timestamp to pass through mapper.
+
+        var idCheck = await _pgSqlContext.CustomerEntity.AnyAsync(c => c.Id == id, cancellationToken);
+        if (idCheck)
+        {
+            var customer = await _pgSqlContext.CustomerEntity
+                .FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
+            Mappers.PutCustomerModelToCustomerEntity(customer,
+                putCustomerModel,
+                passwordCrypt,
+                passwordHash,
+                passwordSalt);
+            await _pgSqlContext.SaveChangesAsync(cancellationToken); 
+        }
+
+        return null;
+    }
+
+    public async Task<object> DeleteCustomersAsync(string id, CancellationToken cancellationToken)
+    {
+        var idCheck = await _pgSqlContext.CustomerEntity.AnyAsync(c => c.Id == id, cancellationToken: cancellationToken); 
+
+        if (!idCheck) return null;
+        var filteredById = await _pgSqlContext.CustomerEntity.FirstOrDefaultAsync(c => c.Id == id, cancellationToken: cancellationToken);
+        var deleted = _pgSqlContext.CustomerEntity.Remove(filteredById);
+        await _pgSqlContext.SaveChangesAsync(cancellationToken);
+        return deleted;
+    }
 }

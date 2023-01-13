@@ -1,8 +1,4 @@
-using Microsoft.OpenApi.Extensions;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
-using MongoDB.Bson.Serialization.IdGenerators;
-using MongoDB.Driver;
+using Microsoft.AspNetCore.Components.Web;
 using PizzaPlanet.API.Entities;
 using PizzaPlanet.API.Models;
 
@@ -26,42 +22,85 @@ public abstract class Mappers
       return passedModel;
    }
    
-   public static PizzasEntity PutPizzaModelToPizzasEntity(PutPizzaModel putPizzaModel, DateTime date)
+   public static void PizzasEntityToPutPizzaModel(PizzasEntity pizzasEntity, PutPizzaModel putPizzaModel)
    {
-      var passedModel = new PizzasEntity
-      {
-         Id = putPizzaModel.Id,
-         CrustType = putPizzaModel.CrustType,
-         Size = putPizzaModel.Size,
-         Toppings = putPizzaModel.Toppings,
-         IsGlutenFree = putPizzaModel.IsGlutenFree,
-         IsVegan = putPizzaModel.IsVegan,
-         IsVegetarian = putPizzaModel.IsVegetarian,
-         Quantity = putPizzaModel.Quantity,
-         CreatedAt = date
-      };
-      
-      return passedModel;
+      pizzasEntity.CrustType = putPizzaModel.CrustType;
+      pizzasEntity.Size = putPizzaModel.Size;
+      pizzasEntity.Toppings = putPizzaModel.Toppings;
+      pizzasEntity.IsVegan = putPizzaModel.IsVegan;
+      pizzasEntity.IsGlutenFree = putPizzaModel.IsGlutenFree;
+      pizzasEntity.IsVegetarian = putPizzaModel.IsVegetarian;
+      pizzasEntity.Quantity = putPizzaModel.Quantity;
+      pizzasEntity.UpdatedAt = DateTime.UtcNow;
+   }  
+   
+   
+   // public static CartEntity PutCartModelToCartEntity(PutCartModel putCartModel, decimal pizzaPriceTotal, int pizzaQuantity, DateTime date)
+   // {
+   //
+   //    var pizzaIds = putCartModel.PizzasEntities.ToList();
+   //
+   //    var passedCart = new CartEntity
+   //    {
+   //       Id = putCartModel.Id,
+   //       PizzasEntities = pizzaIds,
+   //       CustomerId = putCartModel.CustomerId,
+   //       Price = pizzaPriceTotal,
+   //       Quantity = pizzaQuantity,
+   //       CreatedAt = date
+   //    };
+   //    
+   //    return passedCart;
+   // }
+   
+   public static void PutCustomerModelToCustomerEntity(CustomerEntity customerEntity,
+      PutCustomerModel putCustomerModel,
+      string passwordCrypt,
+      string passwordHash,
+      string passwordSalt)
+   {
+         customerEntity.Name = putCustomerModel.Name;
+         customerEntity.Email = putCustomerModel.Email;
+         customerEntity.Password = passwordCrypt;
+         customerEntity.PasswordHash = passwordHash;
+         customerEntity.PasswordSalt = passwordSalt;
+         customerEntity.UpdatedAt = DateTime.UtcNow;
    }
 
    // TODO Was having issues mapping this one with mongoDB, I was trying to remove the timestamp from the model.
-   // public static GetPizzaModel PizzasEntityToPizzasModel(PizzasEntity pizzasEntity)
-   // {
-   //    var passedEntity = new GetPizzaModel
-   //    {
-   //       Id = pizzasEntity.Id,
-   //       CrustType = pizzasEntity.CrustType,
-   //       Size = pizzasEntity.Size,
-   //       Price = pizzasEntity.Price,
-   //       Toppings = pizzasEntity.Toppings,
-   //       IsGlutenFree = pizzasEntity.IsGlutenFree,
-   //       IsVegan = pizzasEntity.IsVegan,
-   //       IsVegetarian = pizzasEntity.IsVegetarian,
-   //       Quantity = pizzasEntity.Quantity,
-   //    };
-   //    
-   //    return passedEntity;
-   // }
+   public static List<GetPizzaModel> ListOfPizzasEntitiesToListOfPizzasModel(List<PizzasEntity> pizzasEntity)
+   {
+      return pizzasEntity.Select(pizza => new GetPizzaModel
+         {
+            Id = pizza.Id,
+            CrustType = pizza.CrustType,
+            Size = pizza.Size,
+            Price = pizza.Price,
+            Toppings = pizza.Toppings,
+            IsGlutenFree = pizza.IsGlutenFree,
+            IsVegan = pizza.IsVegan,
+            IsVegetarian = pizza.IsVegetarian,
+            Quantity = pizza.Quantity,
+         })
+         .ToList();
+   }
+
+   public static GetPizzaModel PizzaEntityToPizzaModel(PizzasEntity pizzasEntity)
+   {
+      var passedEntity = new GetPizzaModel
+      {
+         Id = pizzasEntity.Id,
+         CrustType = pizzasEntity.CrustType,
+         Size = pizzasEntity.Size,
+         Price = pizzasEntity.Price,
+         Toppings = pizzasEntity.Toppings,
+         IsGlutenFree = pizzasEntity.IsGlutenFree,
+         IsVegan = pizzasEntity.IsVegan,
+         IsVegetarian = pizzasEntity.IsVegetarian,
+         Quantity = pizzasEntity.Quantity
+      };
+      return passedEntity;
+   }
 
    public static CustomerEntity CreateCustomerToCustomerEntity(CreateCustomer customer,string passwordCrypt ,string hash, string salt)
    {
@@ -75,4 +114,20 @@ public abstract class Mappers
       };
       return passedCustomer;
    }
+
+   // public static CartEntity CreateCartModelToCartEntity(CreateCartModel createCartModel, decimal pizzaPriceTotal, int pizzaQuantity)
+   // {
+   //
+   //    var pizzaIds = createCartModel.PizzasEntities.ToList();
+   //
+   //    var passedCart = new CartEntity
+   //    {
+   //       PizzasEntities = pizzaIds,
+   //       CustomerId = createCartModel.CustomerId,
+   //       Price = pizzaPriceTotal,
+   //       Quantity = pizzaQuantity
+   //    };
+   //    
+   //    return passedCart;
+   // }
 }

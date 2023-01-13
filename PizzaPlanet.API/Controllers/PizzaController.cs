@@ -15,62 +15,59 @@ namespace PizzaPlanet.API.Controllers;
 [Route("api/pizzas")]
 public class PizzaController : ControllerBase
 {
-    // private readonly MongoDbContext _mongoDbContext;
     private readonly IPizzaRepository _pizzasRepository;
 
     public PizzaController(MongoDbContext mongoDbContext, IPizzaRepository pizzasRepository)
     {
-        // _mongoDbContext = mongoDbContext ?? throw new ArgumentNullException(nameof(mongoDbContext));
         _pizzasRepository = pizzasRepository ?? throw new ArgumentNullException(nameof(pizzasRepository));
     }
 
-    [HttpGet("{id}")]
-    public async Task<ActionResult> GetPizzaById(string id)
-    {
-        var filtered = await _pizzasRepository.GetPizzasByIdAsync(id);
-        if (filtered == null)
-        {
-            return NotFound($"A item with id of: {id}; was not found, please try again");
-        }
-        return Ok(filtered);
-    }
-
-    [HttpGet]
-    public async Task<ActionResult<GetPizzaModel>> GetPizzas(CancellationToken cancellationToken)
-    {
-        var pizzas = await _pizzasRepository.GetAllPizzasAsync(cancellationToken);
-        
-        return Ok(pizzas);
-    }
-
-    [HttpPost]
-    public ActionResult CreatePizza([FromBody] CreatePizzaModel createPizza)
-    {
-        if (createPizza == null)
-        {
-            return BadRequest();
-        }
-
-        _pizzasRepository.CreatePizzaAsync(createPizza, new CancellationToken());
-        return Created("", createPizza);
-    }
-    
-    [HttpPut("{id}")]
-    public ActionResult UpdatePizza(string id, [FromBody] PutPizzaModel pizza)
-    {
-        _pizzasRepository.UpdatePizzaAsync(id, pizza, new CancellationToken());
-        
-        return NoContent();
-    }
-
-    [HttpDelete("{id}")]
-    public ActionResult DeletePizza(string id)
-    {
-        var deleted = _pizzasRepository.DeletePizzaAsync(id, new CancellationToken());
-        if (deleted == null)
-        {
-            return NotFound($"A item with id of: {id}; was not found, please try again");
-        }
-        return NoContent();
-    }
+    // [HttpGet("{id}")]
+    // public async Task<ActionResult<GetPizzaModel>> GetPizzaById(string id)
+    // {
+    //     var pizzas = await _pizzasRepository.GetPizzasByIdAsync(id ,new CancellationToken());
+    //     if (pizzas == null)
+    //     {
+    //         return NotFound($"A item with id of: {id} was not found, please try again");
+    //     }
+    //
+    //     return Ok(Mappers.PizzaEntityToPizzaModel(pizzas));
+    // }
+    //
+    // [HttpGet]
+    // public async Task<ActionResult<GetPizzaModel>> GetPizzas(CancellationToken cancellationToken)
+    // {
+    //     var pizzas = await _pizzasRepository.GetAllPizzasAsync(cancellationToken);
+    //     return Ok(Mappers.ListOfPizzasEntitiesToListOfPizzasModel(pizzas));
+    // }
+    //
+    // [HttpPost]
+    // public async Task<ActionResult> CreatePizza([FromBody] CreatePizzaModel createPizza)
+    // {
+    //     if (createPizza == null)
+    //     {
+    //         return BadRequest();
+    //     }
+    //
+    //     await _pizzasRepository.CreatePizzasAsync(createPizza, new CancellationToken());
+    //     return Created("", createPizza);
+    // }
+    //
+    // [HttpPut("{id}")]
+    // public async Task<ActionResult> UpdatePizza(string id, [FromBody] PutPizzaModel pizza)
+    // {
+    //     await _pizzasRepository.PutPizzasAsync(id, pizza, new CancellationToken());
+    //     return NoContent();
+    // }
+    //
+    // [HttpDelete("{id}")]
+    // public async Task<ActionResult> DeletePizza(string id)
+    // {
+    //     var deleted = _pizzasRepository.DeletePizzasAsync(id, new CancellationToken());
+    //     if (deleted == null)
+    //     {
+    //         return NotFound($"A item with id of: {id}; was not found, please try again");
+    //     }
+    //     return NoContent();
+    // }
 }

@@ -1,5 +1,5 @@
-using System.Net;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using PizzaPlanet.API.Commons;
@@ -13,53 +13,90 @@ namespace PizzaPlanet.API.Services;
 public class PizzasRepository : IPizzaRepository
 {
     private readonly MongoDbContext _mongoDbContext;
-    
+    private readonly PgSqlContext _pgSqlContext;
+
     private IMongoCollection<PizzasEntity> MongoCollection => _mongoDbContext.GetCollection<PizzasEntity>("pizzas");
 
 
-    public PizzasRepository(MongoDbContext mongoDbContext)
+    public PizzasRepository(MongoDbContext mongoDbContext, PgSqlContext pgSqlContext)
     {
         _mongoDbContext = mongoDbContext;
+        _pgSqlContext = pgSqlContext ?? throw new ArgumentNullException(nameof(pgSqlContext));
     }
     
     public async Task<List<PizzasEntity>> GetAllPizzasAsync(CancellationToken cancellationToken)
     {
-        return await MongoCollection.Find(_ => true).ToListAsync(cancellationToken: cancellationToken);
+        // return await MongoCollection.Find(_ => true).ToListAsync(cancellationToken: cancellationToken);
+        return await _pgSqlContext.PizzasEntity.ToListAsync(cancellationToken);
     }
 
-    public async Task<List<PizzasEntity>> GetPizzasByIdAsync(string id)
+    public async Task<PizzasEntity?> GetPizzasByIdAsync(string id, CancellationToken cancellationToken)
     {
-        var idCheck = await MongoCollection.Find(_ => _.Id == id).AnyAsync();
+        // var idCheck = await MongoCollection.Find(_ => _.Id == id).AnyAsync();
+         var idCheck = await _pgSqlContext
+             .PizzasEntity
+             .AnyAsync(c => c.Id == id, cancellationToken: cancellationToken);
 
-        if (!idCheck) return null;
-        var pizza = MongoCollection.Find(p => p.Id == id);
-        return await pizza.ToListAsync();
+         if (!idCheck)
+         { 
+             return null;
+         }
+
+         return await _pgSqlContext.PizzasEntity
+             .Where(p => p.Id == id)
+             .FirstOrDefaultAsync(cancellationToken: cancellationToken);
+
+         // if (!idCheck) return null;
+         // var pizza = MongoCollection.Find(p => p.Id == id);
+         // return pizza;
     }
 
-    public async Task CreatePizzaAsync(CreatePizzaModel createPizzaModel,CancellationToken cancellationToken)
+    public async Task<decimal> GetPizzaPrice(List<string> ids, CancellationToken cancellationToken)
     {
-        // var orders = _mongoDbContext.GetCollection<PizzasEntity>("pizzas");
-        await MongoCollection.InsertOneAsync(Mappers.CreatePizzaModelToPizzasEntity(createPizzaModel), cancellationToken: cancellationToken);
+        var total = 0m;
+
+        foreach (var pizzaId in ids)
+        {
+            var price = await GetPizzasByIdAsync(pizzaId, new CancellationToken());
+            total += price.Price;
+        }
+        return total;
     }
 
-    public async Task UpdatePizzaAsync(string id ,PutPizzaModel putPizzaModel, CancellationToken cancellationToken)
+    public async Task<int> GetPizzaQuantity(List<string> ids, CancellationToken cancellationToken)
     {
-        // Define the filter
-        var filter = Builders<PizzasEntity>.Filter.Eq("_id", ObjectId.Parse(id));
-        // Preserve CreatedAt date timestamp to pass through mapper.
-        var date = await MongoCollection.Find(filter).FirstOrDefaultAsync(cancellationToken: cancellationToken);
-        
-        // Update the document
-        await MongoCollection.ReplaceOneAsync(filter, Mappers.PutPizzaModelToPizzasEntity(putPizzaModel, date.CreatedAt), cancellationToken: cancellationToken);
+        var total = 0;
+
+        foreach (var pizzaId in ids)
+        {
+            var quantity = await GetPizzasByIdAsync(pizzaId, new CancellationToken());
+            total += quantity.Quantity;
+        }
+        return total;
     }
 
-    public async Task<object> DeletePizzaAsync(string id, CancellationToken cancellationToken)
+    public async Task CreatePizzasAsync(CreatePizzaModel createPizzaModel,CancellationToken cancellationToken)
     {
-        var idCheck = await MongoCollection.Find(_ => _.Id == id).AnyAsync(cancellationToken: cancellationToken);
+        await _pgSqlContext.PizzasEntity.AddAsync(Mappers.CreatePizzaModelToPizzasEntity(createPizzaModel), cancellationToken);
+        await _pgSqlContext.SaveChangesAsync(cancellationToken);
+    }
 
-        if (!idCheck) return null;
-        var filteredById = Builders<PizzasEntity>.Filter.Eq("_id", ObjectId.Parse(id));
-        var deleted = await MongoCollection.DeleteOneAsync(filteredById, cancellationToken);
-        return deleted;
+    public async Task PutPizzasAsync(string id ,PutPizzaModel putPizzaModel, CancellationToken cancellationToken)
+    {
+        var pizza = await GetPizzasByIdAsync(id, new CancellationToken());
+        Mappers.PizzasEntityToPutPizzaModel(pizza, putPizzaModel);
+        await _pgSqlContext.SaveChangesAsync(cancellationToken);
+    }
+
+    // TODO something is wrong with the delete here not able to delete any records.
+    public async Task DeletePizzasAsync(string id, CancellationToken cancellationToken)
+    {
+        var item = await _pgSqlContext.PizzasEntity
+            .SingleOrDefaultAsync(p => p.Id == id, cancellationToken);
+        if (item != null)
+        {
+            _pgSqlContext.PizzasEntity.Remove(item);
+            await _pgSqlContext.SaveChangesAsync(cancellationToken);
+        }
     }
 }

@@ -1,6 +1,8 @@
+using System.ComponentModel;
 using System.Reflection;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.EntityFrameworkCore;
 using PizzaPlanet.API.Commons.Validators;
 using PizzaPlanet.API.Context;
 using PizzaPlanet.API.Models;
@@ -33,10 +35,14 @@ builder.Services.AddSingleton<MongoDbContext>(new MongoDbContext(
     builder.Configuration["MongoDatabase:ConnectionString"],
     builder.Configuration["MongoDatabase:DatabaseName"]));
 
+builder.Services.AddDbContext<PgSqlContext>(optionsBuilder =>
+    optionsBuilder.UseNpgsql(@"Server=localhost;Port=5432;Database=postgres;User Id=postgres;Password=password123"));
+
 // Repository Pattern
-builder.Services.AddSingleton<IPizzaRepository, PizzasRepository>();
-builder.Services.AddSingleton<ICustomerRepository, CustomerRepository>();
-builder.Services.AddSingleton<IAuthenticationRepository, AuthenticationRepository>();
+builder.Services.AddTransient<IPizzaRepository, PizzasRepository>();
+builder.Services.AddTransient<ICustomerRepository, CustomerRepository>();
+builder.Services.AddTransient<IAuthenticationRepository, AuthenticationRepository>();
+builder.Services.AddTransient<ICartRepository, CartRepository>();
 
 // Validators
 // builder.Services.AddFluentValidation(c => c.RegisterValidatorsFromAssemblies(Assembly.GetExecutingAssembly()));

@@ -7,12 +7,13 @@ namespace PizzaPlanet.API.Services.Interfaces;
 
 public interface IPizzaRepository
 {
-    Task<List<PizzasEntity>> GetAllPizzasAsync(CancellationToken cancellationToken);
-    Task<List<PizzasEntity>> GetPizzasByIdAsync(string id);
-
-    Task CreatePizzaAsync(CreatePizzaModel createPizzaModel, CancellationToken cancellationToken);
-    
-    Task UpdatePizzaAsync(string id ,PutPizzaModel putPizzaModel, CancellationToken cancellationToken);
-    
-    Task<object> DeletePizzaAsync(string id, CancellationToken cancellationToken);
+    // Task<List<PizzasEntity>> GetAllPizzasAsync(CancellationToken cancellationToken);
+    // Task<PizzasEntity?> GetPizzasByIdAsync(string id, CancellationToken cancellationToken);
+    // Task<decimal> GetPizzaPrice(List<string> id, CancellationToken cancellationToken); 
+    // Task<int> GetPizzaQuantity(List<string> id, CancellationToken cancellationToken); 
+    // Task CreatePizzasAsync(CreatePizzaModel createPizzaModel, CancellationToken cancellationToken);
+    //
+    // Task PutPizzasAsync(string id ,PutPizzaModel putPizzaModel, CancellationToken cancellationToken);
+    //
+    // Task DeletePizzasAsync(string id, CancellationToken cancellationToken);
 }

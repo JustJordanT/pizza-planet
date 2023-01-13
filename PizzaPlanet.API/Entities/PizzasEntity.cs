@@ -1,9 +1,5 @@
-using System.Text.Json.Serialization;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.Driver.Linq;
-using Newtonsoft.Json.Converters;
-using PizzaPlanet.API.Models;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PizzaPlanet.API.Entities;
 
@@ -11,41 +7,36 @@ public class PizzasEntity
 {
     private decimal _price = 12.99m;
 
-    [BsonId, BsonRepresentation(BsonType.ObjectId)]
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]    
     public string Id { get; init; }
-    [BsonElement("crustType")] 
-    public string CrustType { get; init; }
-    [BsonElement("size")] 
-    public string Size { get; init; }
+    public string CrustType { get; set; }
+    public string Size { get; set; }
 
-    [BsonElement("price"), BsonRepresentation(BsonType.Decimal128)]
     public decimal Price
     {
+        // TODO Price not showing as it showed in DB
         get => _price;
-        set { _price = Size switch
+        set
+        {
+            _price = value;
+            _price = Size switch
         {
             "S" => 5.99m,
             "M" => 7.99m,
             "L" => 9.99m,
             _ => Price 
-        }; 
+        };
         }
     }
 
-    [BsonElement("toppings")] 
-    public IEnumerable<string> Toppings { get; init; }
-    [BsonElement("isGlutenFree")]
-    public bool IsGlutenFree { get; init; }
-    [BsonElement("isVegan")]
-    public bool IsVegan { get; init; }
-    [BsonElement("isVegetarian")]
-    public bool IsVegetarian { get; init; }
-    [BsonElement("quantity")]
-    public int Quantity { get; init; }
-
-    [BsonElement("createdAt")]
-    [BsonIgnoreIfDefault, BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
+    public List<string> Toppings { get; set; }
+    public bool IsGlutenFree { get; set; }
+    public bool IsVegan { get; set; }
+    public bool IsVegetarian { get; set; }
+    public int Quantity { get; set; }
+    public string CartId { get; set; }
+    public CartEntity CartEntity { get; set; }
     public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
-    [BsonElement("updatedAt")] 
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 }
