@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using PizzaPlanet.API.Commons;
@@ -19,6 +20,15 @@ public class CartRepository : ICartRepository
     {
         _pgSqlContext = pgSqlContext ?? throw new ArgumentNullException(nameof(pgSqlContext));
         // _pizzaRepository = pizzaRepository ?? throw new ArgumentNullException(nameof(pizzaRepository));
+    }
+
+    public async Task InitCustomerCart(CreateCustomer customer, string initCart, CancellationToken cancellationToken)
+    {
+        var tmp = await _pgSqlContext.CustomerEntity
+            .FirstOrDefaultAsync(c => c.Email == customer.Email, cancellationToken: cancellationToken);
+        Console.WriteLine(tmp);
+        await CreateCartAsync(tmp.Id, cancellationToken);
+        await _pgSqlContext.SaveChangesAsync(cancellationToken);
     }
 
     public async Task CreateCartAsync(string initCart, CancellationToken cancellationToken)

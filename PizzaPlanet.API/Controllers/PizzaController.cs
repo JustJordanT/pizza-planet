@@ -17,7 +17,7 @@ public class PizzaController : ControllerBase
 {
     private readonly IPizzaRepository _pizzasRepository;
 
-    public PizzaController(MongoDbContext mongoDbContext, IPizzaRepository pizzasRepository)
+    public PizzaController(IPizzaRepository pizzasRepository)
     {
         _pizzasRepository = pizzasRepository ?? throw new ArgumentNullException(nameof(pizzasRepository));
     }

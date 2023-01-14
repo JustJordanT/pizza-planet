@@ -31,18 +31,23 @@ builder.Services.AddCors(options =>
 });
 
 // Add the MongoDbContext to the DI container
-builder.Services.AddSingleton<MongoDbContext>(new MongoDbContext(
-    builder.Configuration["MongoDatabase:ConnectionString"],
-    builder.Configuration["MongoDatabase:DatabaseName"]));
+// builder.Services.AddSingleton<MongoDbContext>(new MongoDbContext(
+//     builder.Configuration["MongoDatabase:ConnectionString"],
+//     builder.Configuration["MongoDatabase:DatabaseName"]));
 
 builder.Services.AddDbContext<PgSqlContext>(optionsBuilder =>
     optionsBuilder.UseNpgsql(@"Server=localhost;Port=5432;Database=postgres;User Id=postgres;Password=password123"));
 
 // Repository Pattern
-builder.Services.AddTransient<IPizzaRepository, PizzasRepository>();
-builder.Services.AddTransient<ICustomerRepository, CustomerRepository>();
-builder.Services.AddTransient<IAuthenticationRepository, AuthenticationRepository>();
-builder.Services.AddTransient<ICartRepository, CartRepository>();
+// builder.Services.AddTransient<IPizzaRepository, PizzasRepository>();
+// builder.Services.AddTransient<ICustomerRepository, CustomerRepository>();
+// builder.Services.AddTransient<IAuthenticationRepository, AuthenticationRepository>();
+// builder.Services.AddTransient<ICartRepository, CartRepository>();
+
+builder.Services.AddScoped<IPizzaRepository, PizzasRepository>();
+builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+builder.Services.AddScoped<IAuthenticationRepository, AuthenticationRepository>();
+builder.Services.AddScoped<ICartRepository, CartRepository>();
 
 // Validators
 // builder.Services.AddFluentValidation(c => c.RegisterValidatorsFromAssemblies(Assembly.GetExecutingAssembly()));

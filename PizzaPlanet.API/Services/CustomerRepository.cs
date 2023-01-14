@@ -44,13 +44,8 @@ public class CustomerRepository : ICustomerRepository
             , cancellationToken: cancellationToken);
         // await _cartRepository.CreateCartAsync(Mappers.CreateCustomerToCustomerEntity(customer, passwordCrypt, passwordHash, passwordSalt).Id, cancellationToken);
         await _pgSqlContext.SaveChangesAsync(cancellationToken);
-        
-        // TODO Move this into the correct locations...
-        var tmp = await _pgSqlContext.CustomerEntity
-            .FirstOrDefaultAsync(c => c.Email == customer.Email, cancellationToken: cancellationToken);
-        Console.WriteLine(tmp);
-        await _cartRepository.CreateCartAsync(tmp.Id, cancellationToken);
-        await _pgSqlContext.SaveChangesAsync(cancellationToken);
+        await _cartRepository.InitCustomerCart(customer, customer.Email, cancellationToken);
+
     }
     //
     // public async Task<bool> GetCustomerByEmail(string email)
