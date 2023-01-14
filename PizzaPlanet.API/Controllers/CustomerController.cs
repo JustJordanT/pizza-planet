@@ -17,14 +17,11 @@ namespace PizzaPlanet.API.Controllers
     public class CustomerController : ControllerBase
     {
         private readonly ICustomerRepository _customerRepository;
-        // private readonly ICartRepository _cartRepository;
 
         public CustomerController(
             ICustomerRepository customerRepository)
-            // ICartRepository cartRepository)
         {
             _customerRepository = customerRepository ?? throw new ArgumentNullException(nameof(customerRepository));
-            // _cartRepository = cartRepository ?? throw new ArgumentNullException(nameof(cartRepository));
         }
 
         [HttpPost("register")]

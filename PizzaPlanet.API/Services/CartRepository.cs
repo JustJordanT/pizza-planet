@@ -16,10 +16,8 @@ public class CartRepository : ICartRepository
 
     public CartRepository(
         PgSqlContext pgSqlContext)
-    // IPizzaRepository pizzaRepository)
     {
         _pgSqlContext = pgSqlContext ?? throw new ArgumentNullException(nameof(pgSqlContext));
-        // _pizzaRepository = pizzaRepository ?? throw new ArgumentNullException(nameof(pizzaRepository));
     }
 
     public async Task InitCustomerCart(CreateCustomer customer, string initCart, CancellationToken cancellationToken)

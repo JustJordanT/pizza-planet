@@ -12,15 +12,10 @@ namespace PizzaPlanet.API.Services;
 
 public class PizzasRepository : IPizzaRepository
 {
-    // private readonly MongoDbContext _mongoDbContext;
     private readonly PgSqlContext _pgSqlContext;
-
-    // private IMongoCollection<PizzasEntity> MongoCollection => _mongoDbContext.GetCollection<PizzasEntity>("pizzas");
-
 
     public PizzasRepository(PgSqlContext pgSqlContext)
     {
-        // _mongoDbContext = mongoDbContext;
         _pgSqlContext = pgSqlContext ?? throw new ArgumentNullException(nameof(pgSqlContext));
     }
     

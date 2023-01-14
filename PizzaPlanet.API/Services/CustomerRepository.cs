@@ -15,7 +15,6 @@ public class CustomerRepository : ICustomerRepository
     private readonly IAuthenticationRepository _authenticationRepository;
     private readonly PgSqlContext _pgSqlContext;
     private readonly ICartRepository _cartRepository;
-    // private readonly ICustomerRepository _customerRepository;
 
     public CustomerRepository(
         IAuthenticationRepository authenticationRepository,
@@ -34,7 +33,6 @@ public class CustomerRepository : ICustomerRepository
             out var passwordCrypt,
             out var passwordHash,
             out var passwordSalt);
-        // await MongoCollection.InsertOneAsync(Mappers.CreateCustomerToCustomerEntity(customer, passwordHash, passwordSalt), cancellationToken: cancellationToken);
          await _pgSqlContext.CustomerEntity.AddAsync(
             Mappers.CreateCustomerToCustomerEntity(
                 customer,
@@ -42,7 +40,6 @@ public class CustomerRepository : ICustomerRepository
                 passwordHash,
                 passwordSalt)
             , cancellationToken: cancellationToken);
-        // await _cartRepository.CreateCartAsync(Mappers.CreateCustomerToCustomerEntity(customer, passwordCrypt, passwordHash, passwordSalt).Id, cancellationToken);
         await _pgSqlContext.SaveChangesAsync(cancellationToken);
         await _cartRepository.InitCustomerCart(customer, customer.Email, cancellationToken);
 
