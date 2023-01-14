@@ -10,21 +10,19 @@ namespace PizzaPlanet.API.Services;
 
 public class CartRepository : ICartRepository
 {
-    private readonly MongoDbContext _mongoDbContext;
     private readonly PgSqlContext _pgSqlContext;
     private readonly IPizzaRepository _pizzaRepository;
 
-    private IMongoCollection<CartEntity> MongoCollection => _mongoDbContext.GetCollection<CartEntity>("carts");
-
-
     public CartRepository(
-        MongoDbContext mongoDbContext,
-        PgSqlContext pgSqlContext,
-        IPizzaRepository pizzaRepository)
+        PgSqlContext pgSqlContext)
+    // IPizzaRepository pizzaRepository)
     {
-        _mongoDbContext = mongoDbContext;
         _pgSqlContext = pgSqlContext ?? throw new ArgumentNullException(nameof(pgSqlContext));
-        _pizzaRepository = pizzaRepository;
+        // _pizzaRepository = pizzaRepository ?? throw new ArgumentNullException(nameof(pizzaRepository));
     }
-    
+
+    public async Task CreateCartAsync(string initCart, CancellationToken cancellationToken)
+    {
+        await _pgSqlContext.CartEntity.AddAsync(CartMapper.InitCartModelToCartEntity(initCart), cancellationToken);
+    }
 }

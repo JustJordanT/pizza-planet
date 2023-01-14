@@ -5,5 +5,11 @@ namespace PizzaPlanet.API.Services.Interfaces;
 
 public interface ICartRepository
 {
-    
+    // Task CreateCartAsync(CreateCustomer customer, string initCart, CancellationToken cancellationToken);
+    Task CreateCartAsync(string initCart, CancellationToken cancellationToken);
+    // Task<List<CartEntity>> GetCartsAsync(CancellationToken cancellationToken);
+    // Task<List<CartEntity>> GetCartsByIdAsync(string id, CancellationToken cancellationToken);
+    // Task PutCartsAsync(PutCartModel putCartModel,string id, List<string> pizzaIds, CancellationToken cancellationToken);
+    //
+    //
 }

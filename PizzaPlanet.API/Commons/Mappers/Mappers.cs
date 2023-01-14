@@ -102,7 +102,7 @@ public abstract class Mappers
       return passedEntity;
    }
 
-   public static CustomerEntity CreateCustomerToCustomerEntity(CreateCustomer customer,string passwordCrypt ,string hash, string salt)
+   public static CustomerEntity CreateCustomerToCustomerEntity(CreateCustomer customer, string passwordCrypt ,string hash, string salt)
    {
       var passedCustomer = new CustomerEntity
       {
@@ -115,19 +115,5 @@ public abstract class Mappers
       return passedCustomer;
    }
 
-   // public static CartEntity CreateCartModelToCartEntity(CreateCartModel createCartModel, decimal pizzaPriceTotal, int pizzaQuantity)
-   // {
-   //
-   //    var pizzaIds = createCartModel.PizzasEntities.ToList();
-   //
-   //    var passedCart = new CartEntity
-   //    {
-   //       PizzasEntities = pizzaIds,
-   //       CustomerId = createCartModel.CustomerId,
-   //       Price = pizzaPriceTotal,
-   //       Quantity = pizzaQuantity
-   //    };
-   //    
-   //    return passedCart;
-   // }
+   
 }

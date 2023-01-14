@@ -17,22 +17,26 @@ namespace PizzaPlanet.API.Controllers
     public class CustomerController : ControllerBase
     {
         private readonly ICustomerRepository _customerRepository;
+        // private readonly ICartRepository _cartRepository;
 
-        public CustomerController(ICustomerRepository customerRepository, IAuthenticationRepository authenticationRepository)
+        public CustomerController(
+            ICustomerRepository customerRepository)
+            // ICartRepository cartRepository)
         {
             _customerRepository = customerRepository ?? throw new ArgumentNullException(nameof(customerRepository));
+            // _cartRepository = cartRepository ?? throw new ArgumentNullException(nameof(cartRepository));
         }
 
-        // [HttpPost("register")]
-        // public async Task<ActionResult<bool>> Register(CreateCustomer createCustomer)
-        // {
-        //     if (createCustomer == null)
-        //     {
-        //         return BadRequest();
-        //     }
-        //     await _customerRepository.CreateCustomerAsync(createCustomer, new CancellationToken());
-        //     return Created("", createCustomer);
-        // }
+        [HttpPost("register")]
+        public async Task<ActionResult<bool>> Register(CreateCustomer createCustomer)
+        {
+            if (createCustomer == null)
+            {
+                return BadRequest();
+            }
+            await _customerRepository.CreateCustomerAsync(createCustomer, new CancellationToken());
+            return Created("", createCustomer);
+        }
         //
         // [HttpPost("login")]
         // public async Task<ActionResult<string>> Login(LoginCustomer customer)
