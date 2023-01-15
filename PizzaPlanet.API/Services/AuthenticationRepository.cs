@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
+using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
 using PizzaPlanet.API.Models;
 
@@ -41,5 +42,22 @@ public class AuthenticationRepository : IAuthenticationRepository
             expires: DateTime.Now.AddDays(7),
             signingCredentials: credentials);
         return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+
+    public string GetCurrentEmail(StringValues auth)
+    {
+        var bearerToken = string.Empty;
+        // var auth = Request.Headers["Authorization"];
+        if (!auth.ToString().IsNullOrEmpty() && auth.ToString().StartsWith("Bearer"))
+        {
+            bearerToken = auth.ToString().Substring("Bearer ".Length).Trim();
+        }
+        
+        var handler = new JwtSecurityTokenHandler();
+        // var jsonToken = handler.ReadToken(bearerToken);
+        var tokenS = handler.ReadToken(bearerToken) as JwtSecurityToken;
+        
+        return tokenS.Claims.First(claim => claim.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress").Value;    
+        
     }
 }

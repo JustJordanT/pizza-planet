@@ -17,10 +17,12 @@ namespace PizzaPlanet.API.Controllers;
 public class PizzaController : ControllerBase
 {
     private readonly IPizzaRepository _pizzasRepository;
+    private readonly IAuthenticationRepository _authenticationRepository;
 
-    public PizzaController(IPizzaRepository pizzasRepository)
+    public PizzaController(IPizzaRepository pizzasRepository, IAuthenticationRepository authenticationRepository)
     {
         _pizzasRepository = pizzasRepository ?? throw new ArgumentNullException(nameof(pizzasRepository));
+        _authenticationRepository = authenticationRepository ?? throw new ArgumentNullException(nameof(authenticationRepository));
     }
 
     // [HttpGet("{id}")]
@@ -45,13 +47,9 @@ public class PizzaController : ControllerBase
     [HttpPost]
     public async Task<ActionResult> CreatePizza([FromBody] CreatePizzaModel createPizza)
     {
-        var bearerToken = string.Empty;
-        var auth = Request.Headers["Authorization"];
-        if (auth.ToString().IsNullOrEmpty() && auth.ToString().StartsWith("Bearer"))
-        {
-            bearerToken = auth.ToString().Substring("Bearer ".Length).Trim();
-        }
+        var currentEmail = _authenticationRepository.GetCurrentEmail(Request.Headers["Authorization"]);
         
+
         if (createPizza == null)
         {
             return BadRequest();
@@ -59,6 +57,7 @@ public class PizzaController : ControllerBase
     
         await _pizzasRepository.CreatePizzasAsync(createPizza, new CancellationToken());
         return Created("", createPizza);
+
     }
     //
     // [HttpPut("{id}")]
