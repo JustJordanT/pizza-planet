@@ -33,6 +33,11 @@ public class PgSqlContext : DbContext
             .HasOne(order => order.Cart)
             .WithOne(cart => cart.Order)
             .HasForeignKey<OrderEntity>(order => order.CartId);
+
+        modelBuilder.Entity<PizzasEntity>()
+            .HasOne(pizzas => pizzas.Cart)
+            .WithMany(cart => cart.Pizzas)
+            .HasForeignKey(pizza => pizza.CartId);
     }
 
 

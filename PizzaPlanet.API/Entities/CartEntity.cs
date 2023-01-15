@@ -10,7 +10,9 @@ public class CartEntity
 {
    [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
    public string Id { get; init; }
-   // public List<PizzasEntity> PizzasEntities { get; set; }
+
+   public string PizzaId { get; set; }
+   public List<PizzasEntity> Pizzas { get; set; }
    public decimal Price { get; set; }
    public int Quantity { get; set; }
    public string CustomerId { get; set; }

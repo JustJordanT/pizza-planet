@@ -36,7 +36,7 @@ public class PizzasEntity
     public bool IsVegetarian { get; set; }
     public int Quantity { get; set; }
     public string CartId { get; set; }
-    public CartEntity CartEntity { get; set; }
+    public CartEntity Cart { get; set; }
     public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 }

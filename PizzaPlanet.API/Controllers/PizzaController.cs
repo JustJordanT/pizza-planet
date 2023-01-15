@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
@@ -44,6 +45,13 @@ public class PizzaController : ControllerBase
     [HttpPost]
     public async Task<ActionResult> CreatePizza([FromBody] CreatePizzaModel createPizza)
     {
+        var bearerToken = string.Empty;
+        var auth = Request.Headers["Authorization"];
+        if (auth.ToString().IsNullOrEmpty() && auth.ToString().StartsWith("Bearer"))
+        {
+            bearerToken = auth.ToString().Substring("Bearer ".Length).Trim();
+        }
+        
         if (createPizza == null)
         {
             return BadRequest();
