@@ -20,11 +20,11 @@ public class CartMapper
        return passedCart;
     }
 
-    public static CartEntity InitCartModelToCartEntity(string initCart)
+    public static CartEntity InitCartModelToCartEntity(string customerId)
     {
         var passedCart = new CartEntity
         {
-            CustomerId = initCart
+            CustomerId = customerId
         };
         
         return passedCart;

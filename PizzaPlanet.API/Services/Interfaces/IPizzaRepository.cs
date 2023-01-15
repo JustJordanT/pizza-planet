@@ -11,7 +11,7 @@ public interface IPizzaRepository
     // Task<PizzasEntity?> GetPizzasByIdAsync(string id, CancellationToken cancellationToken);
     // Task<decimal> GetPizzaPrice(List<string> id, CancellationToken cancellationToken); 
     // Task<int> GetPizzaQuantity(List<string> id, CancellationToken cancellationToken); 
-    // Task CreatePizzasAsync(CreatePizzaModel createPizzaModel, CancellationToken cancellationToken);
+    Task CreatePizzasAsync(CreatePizzaModel createPizzaModel, CancellationToken cancellationToken);
     //
     // Task PutPizzasAsync(string id ,PutPizzaModel putPizzaModel, CancellationToken cancellationToken);
     //

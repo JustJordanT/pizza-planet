@@ -41,17 +41,17 @@ public class PizzaController : ControllerBase
     //     return Ok(Mappers.ListOfPizzasEntitiesToListOfPizzasModel(pizzas));
     // }
     //
-    // [HttpPost]
-    // public async Task<ActionResult> CreatePizza([FromBody] CreatePizzaModel createPizza)
-    // {
-    //     if (createPizza == null)
-    //     {
-    //         return BadRequest();
-    //     }
-    //
-    //     await _pizzasRepository.CreatePizzasAsync(createPizza, new CancellationToken());
-    //     return Created("", createPizza);
-    // }
+    [HttpPost]
+    public async Task<ActionResult> CreatePizza([FromBody] CreatePizzaModel createPizza)
+    {
+        if (createPizza == null)
+        {
+            return BadRequest();
+        }
+    
+        await _pizzasRepository.CreatePizzasAsync(createPizza, new CancellationToken());
+        return Created("", createPizza);
+    }
     //
     // [HttpPut("{id}")]
     // public async Task<ActionResult> UpdatePizza(string id, [FromBody] PutPizzaModel pizza)

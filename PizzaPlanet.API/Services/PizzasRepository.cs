@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Bson;
@@ -70,11 +71,11 @@ public class PizzasRepository : IPizzaRepository
     //     return total;
     // }
     //
-    // public async Task CreatePizzasAsync(CreatePizzaModel createPizzaModel,CancellationToken cancellationToken)
-    // {
-    //     await _pgSqlContext.PizzasEntity.AddAsync(Mappers.CreatePizzaModelToPizzasEntity(createPizzaModel), cancellationToken);
-    //     await _pgSqlContext.SaveChangesAsync(cancellationToken);
-    // }
+    public async Task CreatePizzasAsync(CreatePizzaModel createPizzaModel,CancellationToken cancellationToken)
+    {
+        await _pgSqlContext.PizzasEntity.AddAsync(Mappers.CreatePizzaModelToPizzasEntity(createPizzaModel), cancellationToken);
+        await _pgSqlContext.SaveChangesAsync(cancellationToken);
+    }
     //
     // public async Task PutPizzasAsync(string id ,PutPizzaModel putPizzaModel, CancellationToken cancellationToken)
     // {

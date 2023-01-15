@@ -15,15 +15,18 @@ public class CustomerRepository : ICustomerRepository
     private readonly IAuthenticationRepository _authenticationRepository;
     private readonly PgSqlContext _pgSqlContext;
     private readonly ICartRepository _cartRepository;
+    private readonly IOrderRepository _orderRepository;
 
     public CustomerRepository(
         IAuthenticationRepository authenticationRepository,
         PgSqlContext pgSqlContext,
-        ICartRepository cartRepository)
+        ICartRepository cartRepository,
+        IOrderRepository orderRepository)
     {
         _authenticationRepository = authenticationRepository ?? throw new ArgumentNullException(nameof(authenticationRepository));
         _pgSqlContext = pgSqlContext ?? throw new ArgumentNullException(nameof(pgSqlContext));
         _cartRepository = cartRepository ?? throw new ArgumentNullException(nameof(cartRepository));
+        _orderRepository = orderRepository ?? throw new ArgumentNullException(nameof(orderRepository));
     }
 
     public async Task CreateCustomerAsync(CreateCustomer customer, CancellationToken cancellationToken)
@@ -33,6 +36,7 @@ public class CustomerRepository : ICustomerRepository
             out var passwordCrypt,
             out var passwordHash,
             out var passwordSalt);
+
          await _pgSqlContext.CustomerEntity.AddAsync(
             Mappers.CreateCustomerToCustomerEntity(
                 customer,
@@ -41,27 +45,26 @@ public class CustomerRepository : ICustomerRepository
                 passwordSalt)
             , cancellationToken: cancellationToken);
         await _pgSqlContext.SaveChangesAsync(cancellationToken);
-        await _cartRepository.InitCustomerCart(customer, customer.Email, cancellationToken);
-
+        await _cartRepository.InitCustomerCart(customer, cancellationToken);
+        await _orderRepository.InitCustomerOrder(customer, cancellationToken);
     }
-    //
-    // public async Task<bool> GetCustomerByEmail(string email)
-    // {
-    //     // var emailCheck = await MongoCollection.Find(_ => _.Email == email).AnyAsync();
-    //     return await _pgSqlContext.CustomerEntity.AnyAsync(c => c.Email == email);
-    // }
-    //
-    // public async Task<bool> VerifyCustomerPassword(string email, string password)
-    // {
-    //     var user = await _pgSqlContext.CustomerEntity.FirstOrDefaultAsync(c => c.Email == email); 
-    //     
-    //     return await _authenticationRepository.VerifyPassword(password, user.Password);
-    // }
-    //
-    // public string CreateToken(LoginCustomer customer)
-    // {
-    //     return _authenticationRepository.GenerateJwtToken(customer);
-    // }
+    
+    public async Task<bool> GetCustomerByEmail(string email)
+    {
+        return await _pgSqlContext.CustomerEntity.AnyAsync(c => c.Email == email);
+    }
+    
+    public async Task<bool> VerifyCustomerPassword(string email, string password)
+    {
+        var user = await _pgSqlContext.CustomerEntity.FirstOrDefaultAsync(c => c.Email == email); 
+        
+        return await _authenticationRepository.VerifyPassword(password, user.Password);
+    }
+    
+    public string CreateToken(LoginCustomer customer)
+    {
+        return _authenticationRepository.GenerateJwtToken(customer);
+    }
     //
     // public async Task<List<CustomerEntity>> GetCustomersAsync(CancellationToken cancellationToken)
     // {

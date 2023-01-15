@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using PizzaPlanet.API.Models;
 
 namespace PizzaPlanet.API.Entities;
 
@@ -15,6 +16,7 @@ public class CartEntity
    public string CustomerId { get; set; }
    public CustomerEntity Customer { get; set; }
    public bool IsActive { get; set; } = true;
+   public OrderEntity Order { get; set; }
    
    public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;

@@ -31,27 +31,33 @@ namespace PizzaPlanet.API.Controllers
             {
                 return BadRequest();
             }
+
+            if (await _customerRepository.GetCustomerByEmail(createCustomer.Email))
+            {
+                return BadRequest("Customer already registered");
+            }
+            
             await _customerRepository.CreateCustomerAsync(createCustomer, new CancellationToken());
             return Created("", createCustomer);
         }
-        //
-        // [HttpPost("login")]
-        // public async Task<ActionResult<string>> Login(LoginCustomer customer)
-        // {
-        //     if (!await _customerRepository.GetCustomerByEmail(customer.Email))
-        //     {
-        //         return NotFound("Customer not found by email address, please try again");
-        //     }
-        //
-        //     if (!await _customerRepository.VerifyCustomerPassword(customer.Email, customer.Password))
-        //     {
-        //         return BadRequest("Password Incorrect; or invalid");
-        //     }
-        //
-        //     var token = _customerRepository.CreateToken(customer);
-        //     
-        //     return Ok(token);
-        // }
+        
+        [HttpPost("login")]
+        public async Task<ActionResult<string>> Login(LoginCustomer customer)
+        {
+            if (!await _customerRepository.GetCustomerByEmail(customer.Email))
+            {
+                return NotFound("Customer not found by email address, please try again");
+            }
+        
+            if (!await _customerRepository.VerifyCustomerPassword(customer.Email, customer.Password))
+            {
+                return BadRequest("Password Incorrect; or invalid");
+            }
+        
+            var token = _customerRepository.CreateToken(customer);
+            
+            return Ok(token);
+        }
         //
         // [HttpGet]
         // public async Task<ActionResult<CustomerEntity>> GetCustomers() => 

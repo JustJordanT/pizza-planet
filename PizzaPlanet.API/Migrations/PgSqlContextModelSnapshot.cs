@@ -91,6 +91,34 @@ namespace PizzaPlanet.API.Migrations
                     b.ToTable("CustomerEntity");
                 });
 
+            modelBuilder.Entity("PizzaPlanet.API.Models.OrderEntity", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text");
+
+                    b.Property<string>("CartId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("OrderStatus")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CartId")
+                        .IsUnique();
+
+                    b.ToTable("OrderEntity");
+                });
+
             modelBuilder.Entity("PizzaPlanet.API.Entities.CartEntity", b =>
                 {
                     b.HasOne("PizzaPlanet.API.Entities.CustomerEntity", "Customer")
@@ -100,6 +128,23 @@ namespace PizzaPlanet.API.Migrations
                         .IsRequired();
 
                     b.Navigation("Customer");
+                });
+
+            modelBuilder.Entity("PizzaPlanet.API.Models.OrderEntity", b =>
+                {
+                    b.HasOne("PizzaPlanet.API.Entities.CartEntity", "Cart")
+                        .WithOne("Order")
+                        .HasForeignKey("PizzaPlanet.API.Models.OrderEntity", "CartId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cart");
+                });
+
+            modelBuilder.Entity("PizzaPlanet.API.Entities.CartEntity", b =>
+                {
+                    b.Navigation("Order")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("PizzaPlanet.API.Entities.CustomerEntity", b =>

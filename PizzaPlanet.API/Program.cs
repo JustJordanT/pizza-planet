@@ -48,6 +48,7 @@ builder.Services.AddScoped<IPizzaRepository, PizzasRepository>();
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<IAuthenticationRepository, AuthenticationRepository>();
 builder.Services.AddScoped<ICartRepository, CartRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 
 // Validators
 // builder.Services.AddFluentValidation(c => c.RegisterValidatorsFromAssemblies(Assembly.GetExecutingAssembly()));

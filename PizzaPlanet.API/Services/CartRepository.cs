@@ -20,12 +20,15 @@ public class CartRepository : ICartRepository
         _pgSqlContext = pgSqlContext ?? throw new ArgumentNullException(nameof(pgSqlContext));
     }
 
-    public async Task InitCustomerCart(CreateCustomer customer, string initCart, CancellationToken cancellationToken)
+    public async Task InitCustomerCart(CreateCustomer createCustomer, CancellationToken cancellationToken)
     {
-        var tmp = await _pgSqlContext.CustomerEntity
-            .FirstOrDefaultAsync(c => c.Email == customer.Email, cancellationToken: cancellationToken);
-        Console.WriteLine(tmp);
-        await CreateCartAsync(tmp.Id, cancellationToken);
+        var customer = await _pgSqlContext.CustomerEntity
+            .FirstOrDefaultAsync(c => c.Email == createCustomer.Email, cancellationToken: cancellationToken);
+        
+        // await CreateCartAsync(customer.Id, cancellationToken);
+        await _pgSqlContext.CartEntity.AddAsync(CartMapper.InitCartModelToCartEntity(customer.Id), cancellationToken);
+
+        
         await _pgSqlContext.SaveChangesAsync(cancellationToken);
     }
 
