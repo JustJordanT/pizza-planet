@@ -6,10 +6,10 @@ Pizza Planet Modern Monolith Application 🍕 🛻
 ![image](https://user-images.githubusercontent.com/38886930/210684666-03c3544f-a177-48ec-8cf5-f16da8a2c0b0.png)
 
 ## High level design
-<img width="1099" alt="image" src="https://user-images.githubusercontent.com/38886930/210846101-8af1aafb-a7f0-4f4c-a6b9-13dfe919cfa6.png">
+<img width="1009" alt="image" src="https://user-images.githubusercontent.com/38886930/212588571-5b923927-4e0d-4f71-acd2-6f6372e806ed.png">
 
 ## DB Diagram of Pizzas Planet
-<img width="867" alt="image" src="https://user-images.githubusercontent.com/38886930/211888116-85f63990-15ba-4837-8d46-7f94c1407b1a.png">
+<img width="453" alt="image" src="https://user-images.githubusercontent.com/38886930/212588448-e32f370b-57e0-4ed1-a15a-6d642c3183c8.png">
 
 ## Tech Stack
 
