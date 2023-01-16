@@ -20,8 +20,9 @@ public class OrderRepository : IOrderRepository
         var customer = await _pgSqlContext.CustomerEntity
             .FirstOrDefaultAsync(c => c.Email == createCustomer.Email, cancellationToken: cancellationToken);
         
-        var cart = await _pgSqlContext.CartEntity.FirstOrDefaultAsync(c => c.CustomerId == customer.Id, cancellationToken: cancellationToken); 
-        
+        var cart = await _pgSqlContext.CartEntity.FirstOrDefaultAsync(c => c.CustomerId == customer.Id, cancellationToken: cancellationToken);
+
+
         // await CreateCartAsync(customer.Id, cancellationToken);
         await _pgSqlContext.OrderEntity.AddAsync(OrderMapper.InitOrder(cart.Id), cancellationToken);
         await _pgSqlContext.SaveChangesAsync(cancellationToken);

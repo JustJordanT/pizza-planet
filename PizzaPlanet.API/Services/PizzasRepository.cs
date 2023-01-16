@@ -14,10 +14,17 @@ namespace PizzaPlanet.API.Services;
 public class PizzasRepository : IPizzaRepository
 {
     private readonly PgSqlContext _pgSqlContext;
+    private readonly ICustomerRepository _customerRepository;
+    private readonly ICartRepository _cartRepository;
 
-    public PizzasRepository(PgSqlContext pgSqlContext)
+    public PizzasRepository(
+        PgSqlContext pgSqlContext,
+        ICustomerRepository customerRepository,
+        ICartRepository cartRepository)
     {
         _pgSqlContext = pgSqlContext ?? throw new ArgumentNullException(nameof(pgSqlContext));
+        _customerRepository = customerRepository ?? throw new ArgumentNullException(nameof(customerRepository));
+        _cartRepository = cartRepository ?? throw new ArgumentNullException(nameof(cartRepository));
     }
     
     // public async Task<List<PizzasEntity>> GetAllPizzasAsync(CancellationToken cancellationToken)
@@ -71,13 +78,31 @@ public class PizzasRepository : IPizzaRepository
     //     return total;
     // }
     //
-    public async Task CreatePizzasAsync(CreatePizzaModel createPizzaModel,CancellationToken cancellationToken)
+    public async Task CreatePizzasAsync(CreatePizzaModel createPizzaModel, string email, CancellationToken cancellationToken)
     {
+        var customer = await _customerRepository
+            .GetCustomerByEmailAsync(email, cancellationToken);
+        var cart = await _cartRepository
+            .GetCartFromCustomerId(customer.Id, cancellationToken);
         
+        // await _cartRepository.UpdateCartAsync(pizzaId);
         
-        await _pgSqlContext.PizzasEntity.AddAsync(Mappers.CreatePizzaModelToPizzasEntity(createPizzaModel), cancellationToken);
+        await _pgSqlContext.PizzasEntity.AddAsync(Mappers.CreatePizzaModelToPizzasEntity(createPizzaModel, cart.Id), cancellationToken);
+        // cart.PizzaId = await GetPizzaByCartIdAsync(cart.Id, cancellationToken);
         await _pgSqlContext.SaveChangesAsync(cancellationToken);
+        
+        
+        
     }
+
+    public async Task<string> GetPizzaByCartIdAsync(string cartId, CancellationToken cancellationToken)
+    {
+        var thing = await _pgSqlContext.PizzasEntity
+            .FirstOrDefaultAsync(pizza => pizza.CartId == cartId, cancellationToken: cancellationToken);
+        return thing.CartId;
+    }
+
+
     //
     // public async Task PutPizzasAsync(string id ,PutPizzaModel putPizzaModel, CancellationToken cancellationToken)
     // {

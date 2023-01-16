@@ -49,16 +49,26 @@ public class CustomerRepository : ICustomerRepository
         await _orderRepository.InitCustomerOrder(customer, cancellationToken);
     }
     
-    public async Task<bool> GetCustomerByEmail(string email)
+    public async Task<bool> CustomerEmailExists(string email)
     {
-        return await _pgSqlContext.CustomerEntity.AnyAsync(c => c.Email == email);
+        return await _pgSqlContext.CustomerEntity
+            .AnyAsync(c => c.Email == email);
     }
-    
+
+    public async Task<CustomerEntity> GetCustomerByEmailAsync(string email, CancellationToken cancellationToken)
+    {
+        return await _pgSqlContext.CustomerEntity
+            .FirstOrDefaultAsync(customer => customer.Email == email, cancellationToken: cancellationToken);
+        
+    }
+
     public async Task<bool> VerifyCustomerPassword(string email, string password)
     {
-        var user = await _pgSqlContext.CustomerEntity.FirstOrDefaultAsync(c => c.Email == email); 
+        var user = await _pgSqlContext.CustomerEntity
+            .FirstOrDefaultAsync(c => c.Email == email); 
         
-        return await _authenticationRepository.VerifyPassword(password, user.Password);
+        return await _authenticationRepository
+            .VerifyPassword(password, user.Password);
     }
     
     public string CreateToken(LoginCustomer customer)

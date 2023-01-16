@@ -9,7 +9,8 @@ public interface ICustomerRepository
     Task CreateCustomerAsync(CreateCustomer customer, CancellationToken cancellationToken);
 
     // Task<bool> CheckIfEmailAlreadyExistsAsync(, CancellationToken cancellationToken);
-    Task<bool> GetCustomerByEmail(string email);
+    Task<bool> CustomerEmailExists(string email);
+    Task<CustomerEntity> GetCustomerByEmailAsync(string email, CancellationToken cancellationToken);
     Task<bool> VerifyCustomerPassword(string email, string password);
     string CreateToken(LoginCustomer customer);
     //

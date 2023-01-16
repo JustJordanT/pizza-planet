@@ -32,6 +32,16 @@ public class CartRepository : ICartRepository
         await _pgSqlContext.SaveChangesAsync(cancellationToken);
     }
 
+    public async Task<CartEntity> GetCartFromCustomerId(string customerId, CancellationToken cancellationToken)
+    {
+       return await _pgSqlContext.CartEntity.FirstOrDefaultAsync(cart => cart.CustomerId == customerId, cancellationToken: cancellationToken);
+    }
+
+    // public async Task AddPizzaToCart(string pizzaId, CancellationToken cancellationToken)
+    // {
+    //     await _pgSqlContext.CartEntity
+    // }
+
     public async Task CreateCartAsync(string initCart, CancellationToken cancellationToken)
     {
         await _pgSqlContext.CartEntity.AddAsync(CartMapper.InitCartModelToCartEntity(initCart), cancellationToken);

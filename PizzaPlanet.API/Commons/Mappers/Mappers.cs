@@ -6,12 +6,13 @@ namespace PizzaPlanet.API.Commons;
 
 public abstract class Mappers
 {
-   public static PizzasEntity CreatePizzaModelToPizzasEntity(CreatePizzaModel createPizzaModel)
+   public static PizzasEntity CreatePizzaModelToPizzasEntity(CreatePizzaModel createPizzaModel, string cartId)
    {
       var passedModel = new PizzasEntity
       {
          CrustType = createPizzaModel.CrustType,
          Size = createPizzaModel.Size,
+         CartId = cartId,
          Toppings = createPizzaModel.Toppings,
          IsGlutenFree = createPizzaModel.IsGlutenFree,
          IsVegan = createPizzaModel.IsVegan,

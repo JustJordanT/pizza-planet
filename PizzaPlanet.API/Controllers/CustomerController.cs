@@ -32,7 +32,7 @@ namespace PizzaPlanet.API.Controllers
                 return BadRequest();
             }
 
-            if (await _customerRepository.GetCustomerByEmail(createCustomer.Email))
+            if (await _customerRepository.CustomerEmailExists(createCustomer.Email))
             {
                 return BadRequest("Customer already registered");
             }
@@ -44,7 +44,7 @@ namespace PizzaPlanet.API.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<string>> Login(LoginCustomer customer)
         {
-            if (!await _customerRepository.GetCustomerByEmail(customer.Email))
+            if (!await _customerRepository.CustomerEmailExists(customer.Email))
             {
                 return NotFound("Customer not found by email address, please try again");
             }

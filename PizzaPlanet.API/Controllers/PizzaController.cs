@@ -55,7 +55,8 @@ public class PizzaController : ControllerBase
             return BadRequest();
         }
     
-        await _pizzasRepository.CreatePizzasAsync(createPizza, new CancellationToken());
+        await _pizzasRepository.CreatePizzasAsync(createPizza, currentEmail,new CancellationToken());
+
         return Created("", createPizza);
 
     }
