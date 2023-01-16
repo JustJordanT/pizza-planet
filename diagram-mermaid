@@ -1,3 +1,4 @@
+```mermaid
 classDiagram
 direction BT
 class CartEntity {
@@ -45,3 +46,4 @@ class PizzasEntity {
 CartEntity  -->  CustomerEntity : CustomerId:Id
 OrderEntity  -->  CartEntity : CartId:Id
 PizzasEntity  -->  CartEntity : CartId:Id
+```
