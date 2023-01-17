@@ -1,8 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using MongoDB.Bson;
-using MongoDB.Driver;
 using PizzaPlanet.API.Commons;
 using PizzaPlanet.API.Context;
 using PizzaPlanet.API.Entities;
@@ -27,12 +23,6 @@ public class PizzasRepository : IPizzaRepository
         _cartRepository = cartRepository ?? throw new ArgumentNullException(nameof(cartRepository));
     }
 
-    // public async Task<List<PizzasEntity>> GetAllPizzasAsync(CancellationToken cancellationToken)
-    // {
-    //     // return await MongoCollection.Find(_ => true).ToListAsync(cancellationToken: cancellationToken);
-    //     return await _pgSqlContext.PizzasEntity.ToListAsync(cancellationToken);
-    // }
-    //
     public async Task<PizzasEntity> GetPizzasByIdAsync(string id, CancellationToken cancellationToken)
     {
         // var idCheck = await MongoCollection.Find(_ => _.Id == id).AnyAsync();
@@ -86,12 +76,8 @@ public class PizzasRepository : IPizzaRepository
         var cart = await _cartRepository
             .GetCartFromCustomerId(customer.Id, cancellationToken);
 
-        // await _cartRepository.UpdateCartAsync(pizzaId);
-
-
         await _pgSqlContext.PizzasEntity.AddAsync(Mappers.CreatePizzaModelToPizzasEntity(createPizzaModel, cart.Id),
             cancellationToken);
-        // cart.PizzaId = await GetPizzaByCartIdAsync(cart.Id, cancellationToken);
         var pizzas = await GetPizzasFromCartAsync(email, cancellationToken);
 
         await _cartRepository.UpdatePrice(customer.Id, pizzas.Sum(s => s.Price), cancellationToken);
@@ -109,31 +95,16 @@ public class PizzasRepository : IPizzaRepository
         return await _pgSqlContext.PizzasEntity.Where(c => c.CartId == cart.Id).ToListAsync(cancellationToken);
     }
 
-    // public async Task<string> GetPizzaByCartIdAsync(string cartId, CancellationToken cancellationToken)
-    // {
-    //     var cart = await _cartRepository
-    //         .GetCartFromCustomerId(customer.Id, cancellationToken);
-    //     var thing = await _pgSqlContext.PizzasEntity
-    //         .FirstOrDefaultAsync(pizza => pizza.CartId == cartId, cancellationToken: cancellationToken);
-    //     return thing.CartId;
-    // }
-
-
-    //
-    // public async Task PutPizzasAsync(string id ,PutPizzaModel putPizzaModel, CancellationToken cancellationToken)
-    // {
-    //     var pizza = await GetPizzasByIdAsync(id, new CancellationToken());
-    //     Mappers.PizzasEntityToPutPizzaModel(pizza, putPizzaModel);
-    //     await _pgSqlContext.SaveChangesAsync(cancellationToken);
-    // }
+    public async Task PutPizzasAsync(string id ,PutPizzaModel putPizzaModel, CancellationToken cancellationToken)
+    {
+        var pizza = await GetPizzasByIdAsync(id, new CancellationToken());
+        Mappers.PizzasEntityToPutPizzaModel(pizza, putPizzaModel);
+        await _pgSqlContext.SaveChangesAsync(cancellationToken);
+    }
 
     // // TODO something is wrong with the delete here not able to delete any records.
     public async Task DeletePizzasAsync(PizzasEntity pizza, CancellationToken cancellationToken)
     {
-        // var item = await _pgSqlContext.PizzasEntity
-        //     .SingleOrDefaultAsync(p => p.Id == id, cancellationToken);
-        // if (item != null)
-        // {
         _pgSqlContext.PizzasEntity.Remove(pizza);
 
         await _pgSqlContext.SaveChangesAsync(cancellationToken);

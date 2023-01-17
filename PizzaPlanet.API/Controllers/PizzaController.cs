@@ -69,14 +69,14 @@ public class PizzaController : ControllerBase
         return Created("", createPizza);
 
     }
-    //
-    // [HttpPut("{id}")]
-    // public async Task<ActionResult> UpdatePizza(string id, [FromBody] PutPizzaModel pizza)
-    // {
-    //     await _pizzasRepository.PutPizzasAsync(id, pizza, new CancellationToken());
-    //     return NoContent();
-    // }
-    //
+    
+    [HttpPut("{id}")]
+    public async Task<ActionResult> UpdatePizza(string id, [FromBody] PutPizzaModel pizza)
+    {
+        await _pizzasRepository.PutPizzasAsync(id, pizza, new CancellationToken());
+        return NoContent();
+    }
+    
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeletePizza(string id)
     {
