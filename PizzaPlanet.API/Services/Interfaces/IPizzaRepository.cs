@@ -7,7 +7,7 @@ namespace PizzaPlanet.API.Services.Interfaces;
 
 public interface IPizzaRepository
 {
-    // Task<List<PizzasEntity>> GetAllPizzasAsync(CancellationToken cancellationToken);
+    Task<bool> PizzaExistsAsync(string id);
     Task<PizzasEntity> GetPizzasByIdAsync(string id, CancellationToken cancellationToken);
     // Task<decimal> GetPizzaPrice(List<string> id, CancellationToken cancellationToken); 
     // Task<int> GetPizzaQuantity(List<string> id, CancellationToken cancellationToken); 

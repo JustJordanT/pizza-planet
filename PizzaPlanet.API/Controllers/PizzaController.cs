@@ -43,7 +43,7 @@ public class PizzaController : ControllerBase
     //     var pizzas = await _pizzasRepository.GetAllPizzasAsync(cancellationToken);
     //     return Ok(Mappers.ListOfPizzasEntitiesToListOfPizzasModel(pizzas));
     // }
-    //
+    
     [HttpGet]
     public async Task<OkObjectResult> GetPizzasFromCart()
     {
@@ -73,6 +73,10 @@ public class PizzaController : ControllerBase
     [HttpPut("{id}")]
     public async Task<ActionResult> UpdatePizza(string id, [FromBody] PutPizzaModel pizza)
     {
+        if (!await _pizzasRepository.PizzaExistsAsync(id))
+        {
+            return NotFound($"A item with id of: {id}; was not found, please try again");
+        }
         await _pizzasRepository.PutPizzasAsync(id, pizza, new CancellationToken());
         return NoContent();
     }
@@ -80,10 +84,10 @@ public class PizzaController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeletePizza(string id)
     {
-        // if (string.IsNullOrEmpty(id))
-        // {
-        //     return NotFound($"A item with id of: {id}; was not found, please try again");
-        // }
+        if (!await _pizzasRepository.PizzaExistsAsync(id))
+        {
+            return NotFound($"A item with id of: {id}; was not found, please try again");
+        }
         var pizza = _pizzasRepository.GetPizzasByIdAsync(id, new CancellationToken());
         _pizzasRepository.DeletePizzasAsync(await pizza, new CancellationToken());
         return NoContent();

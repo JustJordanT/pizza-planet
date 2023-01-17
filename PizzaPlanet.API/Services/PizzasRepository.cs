@@ -23,6 +23,12 @@ public class PizzasRepository : IPizzaRepository
         _cartRepository = cartRepository ?? throw new ArgumentNullException(nameof(cartRepository));
     }
 
+
+    public async Task<bool> PizzaExistsAsync(string id)
+    {
+        return await _pgSqlContext.PizzasEntity.AnyAsync(pizza => pizza.Id == id);
+    } 
+
     public async Task<PizzasEntity> GetPizzasByIdAsync(string id, CancellationToken cancellationToken)
     {
         // var idCheck = await MongoCollection.Find(_ => _.Id == id).AnyAsync();
@@ -39,35 +45,8 @@ public class PizzasRepository : IPizzaRepository
              .Where(p => p.Id == id)
              .FirstOrDefaultAsync(cancellationToken: cancellationToken);
     
-         // if (!idCheck) return null;
-         // var pizza = MongoCollection.Find(p => p.Id == id);
-         // return pizza;
     }
-    //
-    // public async Task<decimal> GetPizzaPrice(List<string> ids, CancellationToken cancellationToken)
-    // {
-    //     var total = 0m;
-    //
-    //     foreach (var pizzaId in ids)
-    //     {
-    //         var price = await GetPizzasByIdAsync(pizzaId, new CancellationToken());
-    //         total += price.Price;
-    //     }
-    //     return total;
-    // }
-    //
-    // public async Task<int> GetPizzaQuantity(List<string> ids, CancellationToken cancellationToken)
-    // {
-    //     var total = 0;
-    //
-    //     foreach (var pizzaId in ids)
-    //     {
-    //         var quantity = await GetPizzasByIdAsync(pizzaId, new CancellationToken());
-    //         total += quantity.Quantity;
-    //     }
-    //     return total;
-    // }
-    //
+
     public async Task CreatePizzasAsync(CreatePizzaModel createPizzaModel, string email,
         CancellationToken cancellationToken)
     {

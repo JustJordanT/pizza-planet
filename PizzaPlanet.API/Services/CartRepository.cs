@@ -53,6 +53,10 @@ public class CartRepository : ICartRepository
     {
         await _pgSqlContext.CartEntity.AddAsync(CartMapper.InitCartModelToCartEntity(initCart), cancellationToken);
     }
-    
+
+    public async Task UpdateCartIsActiveAsync(string email, CancellationToken cancellationToken)
+    {
+        
+    }
     
 }
