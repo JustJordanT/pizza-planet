@@ -44,6 +44,15 @@ public class PizzaController : ControllerBase
     //     return Ok(Mappers.ListOfPizzasEntitiesToListOfPizzasModel(pizzas));
     // }
     //
+    [HttpGet]
+    public async Task<OkObjectResult> GetPizzasFromCart()
+    {
+        var currentEmail = _authenticationRepository.GetCurrentEmail(Request.Headers["Authorization"]);
+        // return Ok(await _pizzasRepository.GetPizzasFromCartAsync(currentEmail, new CancellationToken()));
+        var pizzas = await _pizzasRepository.GetPizzasFromCartAsync(currentEmail, new CancellationToken());
+        return Ok(Mappers.ListOfPizzasEntitiesToListOfPizzasModel(pizzas));
+    }
+
     [HttpPost]
     public async Task<ActionResult> CreatePizza([FromBody] CreatePizzaModel createPizza)
     {

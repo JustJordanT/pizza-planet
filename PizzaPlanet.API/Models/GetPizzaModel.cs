@@ -7,6 +7,7 @@ namespace PizzaPlanet.API.Models;
 public record GetPizzaModel
 {
     public string Id { get; set; }
+    public string CartId { get; set; }
     public string CrustType { get; init; }
     public  string Size { get; init; }
     public decimal Price { get; init; }

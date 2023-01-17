@@ -1,3 +1,4 @@
+using System.Drawing;
 using Microsoft.AspNetCore.Components.Web;
 using PizzaPlanet.API.Entities;
 using PizzaPlanet.API.Models;
@@ -8,16 +9,26 @@ public abstract class Mappers
 {
    public static PizzasEntity CreatePizzaModelToPizzasEntity(CreatePizzaModel createPizzaModel, string cartId)
    {
+      // private readonly Dictionary<string, decimal> prices;
+      //
+      var prices  = new Dictionary<string, decimal>
+      {
+         { "S", 6.99m },
+         { "M", 7.99m },
+         { "L", 9.99m },
+      };
+      
       var passedModel = new PizzasEntity
       {
          CrustType = createPizzaModel.CrustType,
          Size = createPizzaModel.Size,
          CartId = cartId,
+         Price = prices[createPizzaModel.Size] * createPizzaModel.Quantity,
          Toppings = createPizzaModel.Toppings,
          IsGlutenFree = createPizzaModel.IsGlutenFree,
          IsVegan = createPizzaModel.IsVegan,
          IsVegetarian = createPizzaModel.IsVegetarian,
-         Quantity = createPizzaModel.Quantity,
+         Quantity = createPizzaModel.Quantity
       };
       
       return passedModel;
@@ -68,12 +79,12 @@ public abstract class Mappers
          customerEntity.UpdatedAt = DateTime.UtcNow;
    }
 
-   // TODO Was having issues mapping this one with mongoDB, I was trying to remove the timestamp from the model.
-   public static List<GetPizzaModel> ListOfPizzasEntitiesToListOfPizzasModel(List<PizzasEntity> pizzasEntity)
+   public static List<GetPizzaModel> ListOfPizzasEntitiesToListOfPizzasModel(IEnumerable<PizzasEntity> pizzasEntity)
    {
       return pizzasEntity.Select(pizza => new GetPizzaModel
          {
             Id = pizza.Id,
+            CartId = pizza.CartId,
             CrustType = pizza.CrustType,
             Size = pizza.Size,
             Price = pizza.Price,
@@ -81,7 +92,7 @@ public abstract class Mappers
             IsGlutenFree = pizza.IsGlutenFree,
             IsVegan = pizza.IsVegan,
             IsVegetarian = pizza.IsVegetarian,
-            Quantity = pizza.Quantity,
+            Quantity = pizza.Quantity
          })
          .ToList();
    }
