@@ -77,14 +77,15 @@ public class PizzaController : ControllerBase
     //     return NoContent();
     // }
     //
-    // [HttpDelete("{id}")]
-    // public async Task<ActionResult> DeletePizza(string id)
-    // {
-    //     var deleted = _pizzasRepository.DeletePizzasAsync(id, new CancellationToken());
-    //     if (deleted == null)
-    //     {
-    //         return NotFound($"A item with id of: {id}; was not found, please try again");
-    //     }
-    //     return NoContent();
-    // }
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> DeletePizza(string id)
+    {
+        // if (string.IsNullOrEmpty(id))
+        // {
+        //     return NotFound($"A item with id of: {id}; was not found, please try again");
+        // }
+        var pizza = _pizzasRepository.GetPizzasByIdAsync(id, new CancellationToken());
+        _pizzasRepository.DeletePizzasAsync(await pizza, new CancellationToken());
+        return NoContent();
+    }
 }

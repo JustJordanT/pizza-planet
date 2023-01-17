@@ -26,33 +26,33 @@ public class PizzasRepository : IPizzaRepository
         _customerRepository = customerRepository ?? throw new ArgumentNullException(nameof(customerRepository));
         _cartRepository = cartRepository ?? throw new ArgumentNullException(nameof(cartRepository));
     }
-    
+
     // public async Task<List<PizzasEntity>> GetAllPizzasAsync(CancellationToken cancellationToken)
     // {
     //     // return await MongoCollection.Find(_ => true).ToListAsync(cancellationToken: cancellationToken);
     //     return await _pgSqlContext.PizzasEntity.ToListAsync(cancellationToken);
     // }
     //
-    // public async Task<PizzasEntity?> GetPizzasByIdAsync(string id, CancellationToken cancellationToken)
-    // {
-    //     // var idCheck = await MongoCollection.Find(_ => _.Id == id).AnyAsync();
-    //      var idCheck = await _pgSqlContext
-    //          .PizzasEntity
-    //          .AnyAsync(c => c.Id == id, cancellationToken: cancellationToken);
-    //
-    //      if (!idCheck)
-    //      { 
-    //          return null;
-    //      }
-    //
-    //      return await _pgSqlContext.PizzasEntity
-    //          .Where(p => p.Id == id)
-    //          .FirstOrDefaultAsync(cancellationToken: cancellationToken);
-    //
-    //      // if (!idCheck) return null;
-    //      // var pizza = MongoCollection.Find(p => p.Id == id);
-    //      // return pizza;
-    // }
+    public async Task<PizzasEntity> GetPizzasByIdAsync(string id, CancellationToken cancellationToken)
+    {
+        // var idCheck = await MongoCollection.Find(_ => _.Id == id).AnyAsync();
+         var idCheck = await _pgSqlContext
+             .PizzasEntity
+             .AnyAsync(c => c.Id == id, cancellationToken: cancellationToken);
+    
+         if (!idCheck)
+         { 
+             return null;
+         }
+    
+         return await _pgSqlContext.PizzasEntity
+             .Where(p => p.Id == id)
+             .FirstOrDefaultAsync(cancellationToken: cancellationToken);
+    
+         // if (!idCheck) return null;
+         // var pizza = MongoCollection.Find(p => p.Id == id);
+         // return pizza;
+    }
     //
     // public async Task<decimal> GetPizzaPrice(List<string> ids, CancellationToken cancellationToken)
     // {
@@ -78,22 +78,24 @@ public class PizzasRepository : IPizzaRepository
     //     return total;
     // }
     //
-    public async Task CreatePizzasAsync(CreatePizzaModel createPizzaModel, string email, CancellationToken cancellationToken)
+    public async Task CreatePizzasAsync(CreatePizzaModel createPizzaModel, string email,
+        CancellationToken cancellationToken)
     {
         var customer = await _customerRepository
             .GetCustomerByEmailAsync(email, cancellationToken);
         var cart = await _cartRepository
             .GetCartFromCustomerId(customer.Id, cancellationToken);
-        
+
         // await _cartRepository.UpdateCartAsync(pizzaId);
 
 
-        await _pgSqlContext.PizzasEntity.AddAsync(Mappers.CreatePizzaModelToPizzasEntity(createPizzaModel, cart.Id), cancellationToken);
+        await _pgSqlContext.PizzasEntity.AddAsync(Mappers.CreatePizzaModelToPizzasEntity(createPizzaModel, cart.Id),
+            cancellationToken);
         // cart.PizzaId = await GetPizzaByCartIdAsync(cart.Id, cancellationToken);
-        // var pizzas = await GetPizzasFromCartAsync(email, cancellationToken);
-        
-        // await _cartRepository.UpdatePrice(customer.Id ,pizzas.Sum(s => s.Price), cancellationToken);
-        // await _cartRepository.UpdateQuantity(customer.Id, pizzas.Sum(s => s.Quantity), cancellationToken);
+        var pizzas = await GetPizzasFromCartAsync(email, cancellationToken);
+
+        await _cartRepository.UpdatePrice(customer.Id, pizzas.Sum(s => s.Price), cancellationToken);
+        await _cartRepository.UpdateQuantity(customer.Id, pizzas.Sum(s => s.Quantity), cancellationToken);
         await _pgSqlContext.SaveChangesAsync(cancellationToken);
     }
 
@@ -124,16 +126,16 @@ public class PizzasRepository : IPizzaRepository
     //     Mappers.PizzasEntityToPutPizzaModel(pizza, putPizzaModel);
     //     await _pgSqlContext.SaveChangesAsync(cancellationToken);
     // }
-    //
+
     // // TODO something is wrong with the delete here not able to delete any records.
-    // public async Task DeletePizzasAsync(string id, CancellationToken cancellationToken)
-    // {
-    //     var item = await _pgSqlContext.PizzasEntity
-    //         .SingleOrDefaultAsync(p => p.Id == id, cancellationToken);
-    //     if (item != null)
-    //     {
-    //         _pgSqlContext.PizzasEntity.Remove(item);
-    //         await _pgSqlContext.SaveChangesAsync(cancellationToken);
-    //     }
-    // }
+    public async Task DeletePizzasAsync(PizzasEntity pizza, CancellationToken cancellationToken)
+    {
+        // var item = await _pgSqlContext.PizzasEntity
+        //     .SingleOrDefaultAsync(p => p.Id == id, cancellationToken);
+        // if (item != null)
+        // {
+        _pgSqlContext.PizzasEntity.Remove(pizza);
+
+        await _pgSqlContext.SaveChangesAsync(cancellationToken);
+    }
 }

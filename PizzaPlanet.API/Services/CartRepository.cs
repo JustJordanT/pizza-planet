@@ -41,14 +41,14 @@ public class CartRepository : ICartRepository
     {
         var cart = await GetCartFromCustomerId(customerId, cancellationToken);
         cart.Quantity = quantity;
-        await _pgSqlContext.SaveChangesAsync(cancellationToken);
+        // await _pgSqlContext.SaveChangesAsync(cancellationToken);
     }
 
     public async Task UpdatePrice(string customerId, decimal price, CancellationToken cancellationToken)
     {
         var cart = await GetCartFromCustomerId(customerId, cancellationToken);
         cart.Price = price;
-        await _pgSqlContext.SaveChangesAsync(cancellationToken);
+        // await _pgSqlContext.SaveChangesAsync(cancellationToken);
     }
 
     // public async Task AddPizzaToCart(string pizzaId, CancellationToken cancellationToken)

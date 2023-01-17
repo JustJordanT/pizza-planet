@@ -9,8 +9,7 @@ public abstract class Mappers
 {
    public static PizzasEntity CreatePizzaModelToPizzasEntity(CreatePizzaModel createPizzaModel, string cartId)
    {
-      // private readonly Dictionary<string, decimal> prices;
-      //
+      
       var prices  = new Dictionary<string, decimal>
       {
          { "S", 6.99m },

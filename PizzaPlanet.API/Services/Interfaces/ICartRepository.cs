@@ -8,8 +8,8 @@ public interface ICartRepository
     Task InitCustomerCart(CreateCustomer customer, CancellationToken cancellationToken);
     Task<CartEntity> GetCartFromCustomerId(string customerId, CancellationToken cancellationToken);
     
-    // Task UpdateQuantity(string customerId, int quantity, CancellationToken cancellationToken);
-    // Task UpdatePrice(string customerId, decimal price, CancellationToken cancellationToken);
+    Task UpdateQuantity(string customerId, int quantity, CancellationToken cancellationToken);
+    Task UpdatePrice(string customerId, decimal price, CancellationToken cancellationToken);
     
     // Task AddPizzaToCart(string pizzaId, CancellationToken cancellationToken);
     Task CreateCartAsync(string initCart, CancellationToken cancellationToken);
