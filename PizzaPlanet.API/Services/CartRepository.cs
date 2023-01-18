@@ -43,15 +43,15 @@ public class CartRepository : ICartRepository
        return await _pgSqlContext.CartEntity.FirstOrDefaultAsync(cart => cart.CustomerId == customerId, cancellationToken: cancellationToken);
     }
 
-    public async Task UpdateQuantity(string customerId, int quantity, CancellationToken cancellationToken)
+    public async Task UpdateQuantity(string email, int quantity, CancellationToken cancellationToken)
     {
-        var cart = await GetCartFromCustomerId(customerId, cancellationToken);
+        var cart = await _accountRepository.GetCartFromCustomerId(email, cancellationToken);
         cart.Quantity = quantity;
     }
 
-    public async Task UpdatePrice(string customerId, decimal price, CancellationToken cancellationToken)
+    public async Task UpdatePrice(string email, decimal price, CancellationToken cancellationToken)
     {
-        var cart = await GetCartFromCustomerId(customerId, cancellationToken);
+        var cart = await _accountRepository.GetCartFromCustomerId(email, cancellationToken);
         cart.Price = price;
     }
 
