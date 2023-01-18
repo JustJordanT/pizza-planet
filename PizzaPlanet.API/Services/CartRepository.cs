@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Extensions;
 using PizzaPlanet.API.Commons;
 using PizzaPlanet.API.Context;
 using PizzaPlanet.API.Entities;
@@ -11,14 +12,18 @@ public class CartRepository : ICartRepository
 {
     private readonly PgSqlContext _pgSqlContext;
     private readonly IAccountRepository _accountRepository;
-    private readonly IPizzaRepository _pizzaRepository;
+
+    private readonly IOrderRepository _orderRepository;
+    // private readonly IPizzaRepository _pizzaRepository;
 
     public CartRepository(
         PgSqlContext pgSqlContext,
-        IAccountRepository accountRepository)
+        IAccountRepository accountRepository,
+        IOrderRepository orderRepository)
     {
         _pgSqlContext = pgSqlContext ?? throw new ArgumentNullException(nameof(pgSqlContext));
         _accountRepository = accountRepository ?? throw new ArgumentNullException(nameof(accountRepository));
+        _orderRepository = orderRepository ?? throw new ArgumentNullException(nameof(orderRepository));
     }
 
     public async Task InitCustomerCart(CreateCustomer createCustomer, CancellationToken cancellationToken)
@@ -58,15 +63,21 @@ public class CartRepository : ICartRepository
     public async Task SubmitCart(string email, CancellationToken cancellationToken)
     {
         var cart = await _accountRepository.GetCartFromCustomerId(email, cancellationToken);
+        await _orderRepository.UpdateOrderStatus(cart , email, cancellationToken);
         cart.IsActive = false;
-        await ResetCartAsync(email, cancellationToken);
         await _pgSqlContext.SaveChangesAsync(cancellationToken);
+        
+        await ResetCartAsync(email, cancellationToken);
+        var cartNew = await _accountRepository.GetCartFromCustomerId(email, cancellationToken);
+        await _orderRepository.ResetOrderAsync(cartNew, email, cancellationToken);
 
+        await _pgSqlContext.SaveChangesAsync(cancellationToken);
     }
 
     public async Task ResetCartAsync(string email, CancellationToken cancellationToken)
     {
         var customer = await _accountRepository.GetCustomerByEmailAsync(email, cancellationToken);
         await _pgSqlContext.CartEntity.AddAsync(CartMapper.InitCartModelToCartEntity(customer.Id), cancellationToken);
+        await _pgSqlContext.SaveChangesAsync(cancellationToken);
     }
 }

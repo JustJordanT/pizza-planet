@@ -19,19 +19,22 @@ public class AccountRepository : IAccountRepository
    public async Task<CartEntity> GetCartFromCustomerId(string email, CancellationToken cancellationToken)
    {
       var customer = await GetCustomerByEmailAsync(email, cancellationToken);
-      return await _pgSqlContext.CartEntity.FirstOrDefaultAsync(cart => cart.CustomerId == customer.Id && cart.IsActive, cancellationToken: cancellationToken);
+      if (customer == null) throw new ArgumentNullException(nameof(customer));
+      return await _pgSqlContext.CartEntity.Where(cart => cart.CustomerId == customer.Id && cart.IsActive).FirstOrDefaultAsync(cancellationToken);
    }
    
    public async Task<CustomerEntity> GetCustomerByEmailAsync(string email, CancellationToken cancellationToken)
    {
+      if (email == null) throw new ArgumentNullException(nameof(email));
       return await _pgSqlContext.CustomerEntity
          .FirstOrDefaultAsync(customer => customer.Email == email, cancellationToken: cancellationToken);
    }
   
-   public async Task<OrderEntity> GetOrderFromCartId(string email, CancellationToken cancellationToken)
+   public async Task<OrderEntity?> GetOrderFromCartId(CartEntity cart, string email, CancellationToken cancellationToken)
    {
-      var cart = await  GetCartFromCustomerId(email, cancellationToken);
-      return await _pgSqlContext.OrderEntity.FirstOrDefaultAsync(order => order.CartId == cart.Id, cancellationToken: cancellationToken);
+      // var cart = await GetCartFromCustomerId(email, cancellationToken);
+      // if (cart == null) throw new ArgumentNullException(nameof(cart));
+      return await _pgSqlContext.OrderEntity.Where(order => order.CartId == cart.Id).FirstOrDefaultAsync(cancellationToken);
    }
    
 }

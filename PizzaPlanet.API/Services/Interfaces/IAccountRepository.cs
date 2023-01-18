@@ -7,5 +7,5 @@ public interface IAccountRepository
 {
     Task<CartEntity> GetCartFromCustomerId(string email, CancellationToken cancellationToken);
     Task<CustomerEntity> GetCustomerByEmailAsync(string email, CancellationToken cancellationToken);
-    Task<OrderEntity> GetOrderFromCartId(string email, CancellationToken cancellationToken);
+    Task<OrderEntity?> GetOrderFromCartId(CartEntity cart, string email, CancellationToken cancellationToken);
 }

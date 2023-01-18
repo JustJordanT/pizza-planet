@@ -3,7 +3,7 @@ using PizzaPlanet.API.Models;
 
 namespace PizzaPlanet.API.Commons;
 
-public class OrderMapper
+public static class OrderMapper
 {
     public static OrderEntity InitOrder(string cartId)
     {

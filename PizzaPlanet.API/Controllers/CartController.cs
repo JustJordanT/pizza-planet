@@ -23,7 +23,7 @@ namespace PizzaPlanet.API.Controllers
             _authenticationRepository = authenticationRepository ?? throw new ArgumentNullException(nameof(authenticationRepository));
         }
 
-        [HttpPost]
+        [HttpPost("submit")]
         public async Task<ActionResult> SubmitCart()
         {
             var currentEmail = _authenticationRepository.GetCurrentEmail(Request.Headers["Authorization"]);

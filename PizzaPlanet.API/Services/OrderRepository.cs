@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Extensions;
 using PizzaPlanet.API.Commons;
 using PizzaPlanet.API.Context;
+using PizzaPlanet.API.Entities;
 using PizzaPlanet.API.Models;
 using PizzaPlanet.API.Services.Interfaces;
 
@@ -29,10 +30,20 @@ public class OrderRepository : IOrderRepository
         await _pgSqlContext.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task UpdateOrderStatus(string email,OrderStatus orderStatus, CancellationToken cancellationToken)
+    public async Task UpdateOrderStatus(CartEntity cart, string email, CancellationToken cancellationToken)
     {
-        var order = await _accountRepository.GetOrderFromCartId(email, cancellationToken);
-        order.OrderStatus = nameof(orderStatus);
-        _pgSqlContext.SaveChangesAsync(cancellationToken);
+        var order = await _accountRepository.GetOrderFromCartId(cart ,email, cancellationToken);
+        if (order == null) throw new ArgumentNullException(nameof(order));
+        order.OrderStatus = "Testing";
+        order.UpdatedAt = DateTime.UtcNow;
+        await _pgSqlContext.SaveChangesAsync(cancellationToken);
+    }
+    
+    public async Task ResetOrderAsync(CartEntity cart, string email, CancellationToken cancellationToken)
+    {
+        // var customer = await _accountRepository.GetCustomerByEmailAsync(email, cancellationToken);
+        // var cart = await _accountRepository.GetCartFromCustomerId(email, cancellationToken);
+        await _pgSqlContext.OrderEntity.AddAsync(OrderMapper.InitOrder(cart.Id), cancellationToken);
+        await _pgSqlContext.SaveChangesAsync(cancellationToken);
     }
 }
