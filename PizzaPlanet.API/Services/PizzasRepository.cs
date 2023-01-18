@@ -12,15 +12,18 @@ public class PizzasRepository : IPizzaRepository
     private readonly PgSqlContext _pgSqlContext;
     private readonly ICustomerRepository _customerRepository;
     private readonly ICartRepository _cartRepository;
+    private readonly IAccountRepository _accountRepository;
 
     public PizzasRepository(
         PgSqlContext pgSqlContext,
         ICustomerRepository customerRepository,
-        ICartRepository cartRepository)
+        ICartRepository cartRepository,
+        IAccountRepository acountRepository)
     {
         _pgSqlContext = pgSqlContext ?? throw new ArgumentNullException(nameof(pgSqlContext));
         _customerRepository = customerRepository ?? throw new ArgumentNullException(nameof(customerRepository));
         _cartRepository = cartRepository ?? throw new ArgumentNullException(nameof(cartRepository));
+        _accountRepository = acountRepository ?? throw new ArgumentNullException(nameof(acountRepository));
     }
 
 
@@ -50,11 +53,14 @@ public class PizzasRepository : IPizzaRepository
     public async Task CreatePizzasAsync(CreatePizzaModel createPizzaModel, string email,
         CancellationToken cancellationToken)
     {
-        var customer = await _customerRepository
-            .GetCustomerByEmailAsync(email, cancellationToken);
-        var cart = await _cartRepository
-            .GetCartFromCustomerId(customer.Id, cancellationToken);
+        // var customer = await _customerRepository
+        //     .GetCustomerByEmailAsync(email, cancellationToken);
+        // var cart = await _cartRepository
+        //     .GetCartFromCustomerId(customer.Id, cancellationToken);
 
+        var customer = await _accountRepository.GetCustomerByEmailAsync(email, cancellationToken);
+        var cart = await _accountRepository.GetCartFromCustomerId(email, cancellationToken);
+        
         await _pgSqlContext.PizzasEntity.AddAsync(Mappers.CreatePizzaModelToPizzasEntity(createPizzaModel, cart.Id),
             cancellationToken);
         var pizzas = await GetPizzasFromCartAsync(email, cancellationToken);
@@ -66,10 +72,12 @@ public class PizzasRepository : IPizzaRepository
 
     public async Task<List<PizzasEntity>> GetPizzasFromCartAsync(string email, CancellationToken cancellationToken)
     {
-        var customer = await _customerRepository
-            .GetCustomerByEmailAsync(email, cancellationToken);
-        var cart = await _cartRepository
-            .GetCartFromCustomerId(customer.Id, cancellationToken);
+        // var customer = await _customerRepository
+        //     .GetCustomerByEmailAsync(email, cancellationToken);
+        // var cart = await _cartRepository
+        //     .GetCartFromCustomerId(customer.Id, cancellationToken);
+
+        var cart = await _accountRepository.GetCartFromCustomerId(email, cancellationToken);
 
         return await _pgSqlContext.PizzasEntity.Where(c => c.CartId == cart.Id).ToListAsync(cancellationToken);
     }
@@ -81,7 +89,6 @@ public class PizzasRepository : IPizzaRepository
         await _pgSqlContext.SaveChangesAsync(cancellationToken);
     }
 
-    // // TODO something is wrong with the delete here not able to delete any records.
     public async Task DeletePizzasAsync(PizzasEntity pizza, CancellationToken cancellationToken)
     {
         _pgSqlContext.PizzasEntity.Remove(pizza);

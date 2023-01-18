@@ -16,5 +16,6 @@ public interface ICartRepository
     // Task<List<CartEntity>> GetCartsAsync(CancellationToken cancellationToken);
     // Task<List<CartEntity>> GetCartsByIdAsync(string id, CancellationToken cancellationToken);
     // Task PutCartsAsync(PutCartModel putCartModel,string id, List<string> pizzaIds, CancellationToken cancellationToken);
-    Task UpdateCartIsActiveAsync(string email, CancellationToken cancellationToken);
+    Task SubmitCart(string email, CancellationToken cancellationToken);
+    Task ResetCartAsync(string customerId, CancellationToken cancellationToken);
 }

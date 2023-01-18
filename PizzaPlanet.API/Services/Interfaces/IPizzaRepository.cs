@@ -9,13 +9,9 @@ public interface IPizzaRepository
 {
     Task<bool> PizzaExistsAsync(string id);
     Task<PizzasEntity> GetPizzasByIdAsync(string id, CancellationToken cancellationToken);
-    // Task<decimal> GetPizzaPrice(List<string> id, CancellationToken cancellationToken); 
-    // Task<int> GetPizzaQuantity(List<string> id, CancellationToken cancellationToken); 
     Task CreatePizzasAsync(CreatePizzaModel createPizzaModel, string email, CancellationToken cancellationToken);
     
     Task<List<PizzasEntity>> GetPizzasFromCartAsync(string email, CancellationToken cancellationToken);    //
-    // Task<PizzasEntity> GetPizzasByCartIdAsync(string cartId, CancellationToken cancellationToken);
     Task PutPizzasAsync(string id ,PutPizzaModel putPizzaModel, CancellationToken cancellationToken);
-    //
     Task DeletePizzasAsync(PizzasEntity pizza, CancellationToken cancellationToken);
 }

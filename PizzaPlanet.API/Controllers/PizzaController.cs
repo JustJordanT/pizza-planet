@@ -45,23 +45,29 @@ public class PizzaController : ControllerBase
     // }
     
     [HttpGet]
-    public async Task<OkObjectResult> GetPizzasFromCart()
+    public async Task<ActionResult> GetPizzasFromCart()
     {
         var currentEmail = _authenticationRepository.GetCurrentEmail(Request.Headers["Authorization"]);
-        // return Ok(await _pizzasRepository.GetPizzasFromCartAsync(currentEmail, new CancellationToken()));
+        if (currentEmail == null)
+        {
+            return BadRequest("Missing authorization header, please add and try again");
+        }
         var pizzas = await _pizzasRepository.GetPizzasFromCartAsync(currentEmail, new CancellationToken());
-        return Ok(Mappers.ListOfPizzasEntitiesToListOfPizzasModel(pizzas));
+        var listOfPizzas = Mappers.ListOfPizzasEntitiesToListOfPizzasModel(pizzas);
+        return Ok(listOfPizzas);
     }
 
     [HttpPost]
     public async Task<ActionResult> CreatePizza([FromBody] CreatePizzaModel createPizza)
     {
         var currentEmail = _authenticationRepository.GetCurrentEmail(Request.Headers["Authorization"]);
-        
-
+        if (currentEmail == null)
+        {
+            return BadRequest("Missing authorization header, please add and try again");
+        }
         if (createPizza == null)
         {
-            return BadRequest();
+            return BadRequest("Body must not be empty!");
         }
     
         await _pizzasRepository.CreatePizzasAsync(createPizza, currentEmail,new CancellationToken());

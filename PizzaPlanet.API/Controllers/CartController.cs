@@ -15,12 +15,22 @@ namespace PizzaPlanet.API.Controllers
     public class CartController : ControllerBase
     {
         private readonly ICartRepository _cartRepository;
+        private readonly IAuthenticationRepository _authenticationRepository;
 
-        public CartController(ICartRepository cartRepository)
+        public CartController(ICartRepository cartRepository, IAuthenticationRepository authenticationRepository)
         {
             _cartRepository = cartRepository ?? throw new ArgumentNullException(nameof(cartRepository));
+            _authenticationRepository = authenticationRepository ?? throw new ArgumentNullException(nameof(authenticationRepository));
         }
 
+        [HttpPost]
+        public async Task<ActionResult> SubmitCart()
+        {
+            var currentEmail = _authenticationRepository.GetCurrentEmail(Request.Headers["Authorization"]);
+            await _cartRepository.SubmitCart(currentEmail, new CancellationToken());
+            return NoContent();
+
+        }
         // [HttpPost]
         // public async Task<OkObjectResult> CreateCart(CreateCartModel createCart)
         // {
@@ -49,6 +59,6 @@ namespace PizzaPlanet.API.Controllers
         //     await _cartRepository.PutCartsAsync(customer,id, customer.PizzasEntities,  new CancellationToken());
         //     return NoContent();
         // }
-        
+
     }
 }

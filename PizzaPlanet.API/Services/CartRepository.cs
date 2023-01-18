@@ -1,6 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using MongoDB.Bson;
-using MongoDB.Driver;
 using PizzaPlanet.API.Commons;
 using PizzaPlanet.API.Context;
 using PizzaPlanet.API.Entities;
@@ -12,12 +10,15 @@ namespace PizzaPlanet.API.Services;
 public class CartRepository : ICartRepository
 {
     private readonly PgSqlContext _pgSqlContext;
+    private readonly IAccountRepository _accountRepository;
     private readonly IPizzaRepository _pizzaRepository;
 
     public CartRepository(
-        PgSqlContext pgSqlContext)
+        PgSqlContext pgSqlContext,
+        IAccountRepository accountRepository)
     {
         _pgSqlContext = pgSqlContext ?? throw new ArgumentNullException(nameof(pgSqlContext));
+        _accountRepository = accountRepository ?? throw new ArgumentNullException(nameof(accountRepository));
     }
 
     public async Task InitCustomerCart(CreateCustomer createCustomer, CancellationToken cancellationToken)
@@ -54,9 +55,17 @@ public class CartRepository : ICartRepository
         await _pgSqlContext.CartEntity.AddAsync(CartMapper.InitCartModelToCartEntity(initCart), cancellationToken);
     }
 
-    public async Task UpdateCartIsActiveAsync(string email, CancellationToken cancellationToken)
+    public async Task SubmitCart(string email, CancellationToken cancellationToken)
+    {
+        var cart = await _accountRepository.GetCartFromCustomerId(email, cancellationToken);
+        cart.IsActive = false;
+        await _pgSqlContext.SaveChangesAsync(cancellationToken);
+
+    }
+
+    public async Task ResetCartAsync(string customerId, CancellationToken cancellationToken)
     {
         
     }
-    
+
 }
