@@ -34,7 +34,6 @@ public class PizzasRepository : IPizzaRepository
 
     public async Task<PizzasEntity> GetPizzasByIdAsync(string id, CancellationToken cancellationToken)
     {
-        // var idCheck = await MongoCollection.Find(_ => _.Id == id).AnyAsync();
          var idCheck = await _pgSqlContext
              .PizzasEntity
              .AnyAsync(c => c.Id == id, cancellationToken: cancellationToken);
@@ -53,12 +52,6 @@ public class PizzasRepository : IPizzaRepository
     public async Task CreatePizzasAsync(CreatePizzaModel createPizzaModel, string email,
         CancellationToken cancellationToken)
     {
-        // var customer = await _customerRepository
-        //     .GetCustomerByEmailAsync(email, cancellationToken);
-        // var cart = await _cartRepository
-        //     .GetCartFromCustomerId(customer.Id, cancellationToken);
-
-        // var customer = await _accountRepository.GetCustomerByEmailAsync(email, cancellationToken);
         var cart = await _accountRepository.GetCartFromCustomerId(email, cancellationToken);
         
         await _pgSqlContext.PizzasEntity.AddAsync(Mappers.CreatePizzaModelToPizzasEntity(createPizzaModel, cart.Id),
@@ -73,13 +66,7 @@ public class PizzasRepository : IPizzaRepository
 
     public async Task<List<PizzasEntity>> GetPizzasFromCartAsync(string email, CancellationToken cancellationToken)
     {
-        // var customer = await _customerRepository
-        //     .GetCustomerByEmailAsync(email, cancellationToken);
-        // var cart = await _cartRepository
-        //     .GetCartFromCustomerId(customer.Id, cancellationToken);
-
         var cart = await _accountRepository.GetCartFromCustomerId(email, cancellationToken);
-
         return await _pgSqlContext.PizzasEntity.Where(c => c.CartId == cart.Id).ToListAsync(cancellationToken);
     }
 

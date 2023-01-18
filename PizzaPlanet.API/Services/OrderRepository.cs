@@ -34,15 +34,13 @@ public class OrderRepository : IOrderRepository
     {
         var order = await _accountRepository.GetOrderFromCartId(cart ,email, cancellationToken);
         if (order == null) throw new ArgumentNullException(nameof(order));
-        order.OrderStatus = "Testing";
+        order.OrderStatus = nameof(OrderStatus.Order_Pending);
         order.UpdatedAt = DateTime.UtcNow;
         await _pgSqlContext.SaveChangesAsync(cancellationToken);
     }
     
     public async Task ResetOrderAsync(CartEntity cart, string email, CancellationToken cancellationToken)
     {
-        // var customer = await _accountRepository.GetCustomerByEmailAsync(email, cancellationToken);
-        // var cart = await _accountRepository.GetCartFromCustomerId(email, cancellationToken);
         await _pgSqlContext.OrderEntity.AddAsync(OrderMapper.InitOrder(cart.Id), cancellationToken);
         await _pgSqlContext.SaveChangesAsync(cancellationToken);
     }
