@@ -47,12 +47,14 @@ public class CartRepository : ICartRepository
     {
         var cart = await _accountRepository.GetCartFromCustomerId(email, cancellationToken);
         cart.Quantity = quantity;
+        await  _pgSqlContext.SaveChangesAsync(cancellationToken);
     }
 
     public async Task UpdatePrice(string email, decimal price, CancellationToken cancellationToken)
     {
         var cart = await _accountRepository.GetCartFromCustomerId(email, cancellationToken);
         cart.Price = price;
+        await  _pgSqlContext.SaveChangesAsync(cancellationToken);
     }
 
     public async Task CreateCartAsync(string initCart, CancellationToken cancellationToken)

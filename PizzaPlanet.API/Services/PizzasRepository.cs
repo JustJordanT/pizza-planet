@@ -63,9 +63,10 @@ public class PizzasRepository : IPizzaRepository
         
         await _pgSqlContext.PizzasEntity.AddAsync(Mappers.CreatePizzaModelToPizzasEntity(createPizzaModel, cart.Id),
             cancellationToken);
+        await _pgSqlContext.SaveChangesAsync(cancellationToken);
         var pizzas = await GetPizzasFromCartAsync(email, cancellationToken);
 
-        await _cartRepository.UpdatePrice(email, pizzas.Sum(s => s.Price), cancellationToken);
+        await _cartRepository.UpdatePrice(email, pizzas.Select(s => s.Price).ToList().Sum(), cancellationToken);
         await _cartRepository.UpdateQuantity(email, pizzas.Sum(s => s.Quantity), cancellationToken);
         await _pgSqlContext.SaveChangesAsync(cancellationToken);
     }
