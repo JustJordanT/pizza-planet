@@ -19,7 +19,7 @@ public class AccountRepository : IAccountRepository
    public async Task<CartEntity> GetCartFromCustomerId(string email, CancellationToken cancellationToken)
    {
       var customer = await GetCustomerByEmailAsync(email, cancellationToken);
-      return await _pgSqlContext.CartEntity.FirstOrDefaultAsync(cart => cart.CustomerId == customer.Id, cancellationToken: cancellationToken);
+      return await _pgSqlContext.CartEntity.FirstOrDefaultAsync(cart => cart.CustomerId == customer.Id && cart.IsActive, cancellationToken: cancellationToken);
    }
    
    public async Task<CustomerEntity> GetCustomerByEmailAsync(string email, CancellationToken cancellationToken)
