@@ -9,3 +9,9 @@
   - When a customer is done they will mark the pay and then the `order` will placed into a `pending` status this is when we will send this to the `queue` for the kitchen backend to pick up the order.
   - Once a `order` is completed then the customer will get a email letting them know that a order is completed and ready for pickup.
   - **Rough Draft^^**
+ - [January 17, 2023] I have made a good dent into the initial pass, I have most of the funcationality working. with the flow above. now I am going to be working on the queue service with mass transit and RabbitMQ working with the following Order status to be update while the order is being completed. 
+    - **Ordering**: Initial status when the customer places an order, indicating that the order is being processed.
+    - **Order pending**: Indicates that a order is waiting to be pickup from the kitchen.
+    - **Order Confirmed**: Indicates that the order has been accepted and is being prepared by the kitchen.
+    - **Order Preparing**: Indicates that the order is being prepared for pickup or delivery.
+    - **Order Complete**: Indicates that the order has been completed and is ready for pickup 
