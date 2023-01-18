@@ -59,13 +59,14 @@ public class CartRepository : ICartRepository
     {
         var cart = await _accountRepository.GetCartFromCustomerId(email, cancellationToken);
         cart.IsActive = false;
+        await ResetCartAsync(email, cancellationToken);
         await _pgSqlContext.SaveChangesAsync(cancellationToken);
 
     }
 
-    public async Task ResetCartAsync(string customerId, CancellationToken cancellationToken)
+    public async Task ResetCartAsync(string email, CancellationToken cancellationToken)
     {
-        
+        var customer = await _accountRepository.GetCustomerByEmailAsync(email, cancellationToken);
+        await _pgSqlContext.CartEntity.AddAsync(CartMapper.InitCartModelToCartEntity(customer.Id), cancellationToken);
     }
-
 }

@@ -27,4 +27,11 @@ public class AccountRepository : IAccountRepository
       return await _pgSqlContext.CustomerEntity
          .FirstOrDefaultAsync(customer => customer.Email == email, cancellationToken: cancellationToken);
    }
+  
+   public async Task<OrderEntity> GetOrderFromCartId(string email, CancellationToken cancellationToken)
+   {
+      var cart = await  GetCartFromCustomerId(email, cancellationToken);
+      return await _pgSqlContext.OrderEntity.FirstOrDefaultAsync(order => order.CartId == cart.Id, cancellationToken: cancellationToken);
+   }
+   
 }
