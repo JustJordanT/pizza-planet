@@ -26,11 +26,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Commons\Mapper" />
       <Folder Include="Controllers" />
-      <Folder Include="Entities" />
-      <Folder Include="Models" />
-      <Folder Include="Services\Interfaces" />
     </ItemGroup>
 
 </Project>
