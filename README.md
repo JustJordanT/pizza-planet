@@ -11,6 +11,9 @@ Pizza Planet Modern Monolith Application 🍕 🛻
 ## DB Diagram of Pizzas Planet
 <img width="453" alt="image" src="https://user-images.githubusercontent.com/38886930/212588448-e32f370b-57e0-4ed1-a15a-6d642c3183c8.png">
 
+## DB Diagram of Pizza Planet Kitchen
+<img width="929" alt="image" src="https://user-images.githubusercontent.com/38886930/213474572-d3191743-b013-47c7-9b16-649dddf4638f.png">
+
 ## Tech Stack
 
 - [ASP.NET](https://dotnet.microsoft.com/en-us/apps/aspnet)
