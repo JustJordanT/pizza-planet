@@ -34,7 +34,7 @@ public class OrderRepository : IOrderRepository
     {
         var order = await _accountRepository.GetOrderFromCartId(cart ,email, cancellationToken);
         if (order == null) throw new ArgumentNullException(nameof(order));
-        order.OrderStatus = nameof(OrderStatus.Order_Pending);
+        order.OrderStatus = nameof(OrderStatus.OrderPending);
         order.UpdatedAt = DateTime.UtcNow;
         await _pgSqlContext.SaveChangesAsync(cancellationToken);
     }
