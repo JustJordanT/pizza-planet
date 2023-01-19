@@ -14,4 +14,14 @@ public static class OrderMapper
         
         return passedCart;
     }
+    
+    public static List<GetOrders> ListOfOrders(IEnumerable<OrderEntity> orderEntity)
+    {
+        return orderEntity.Select(pizza => new GetOrders()
+            {
+                Id = pizza.Id,
+                OrderStatus = pizza.OrderStatus
+            })
+            .ToList();
+    }
 }

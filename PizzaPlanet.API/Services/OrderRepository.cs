@@ -44,4 +44,10 @@ public class OrderRepository : IOrderRepository
         await _pgSqlContext.OrderEntity.AddAsync(OrderMapper.InitOrder(cart.Id), cancellationToken);
         await _pgSqlContext.SaveChangesAsync(cancellationToken);
     }
+
+    public async Task<IEnumerable<OrderEntity?>> GetOrdersStatusAsync(string email, CancellationToken cancellationToken)
+    {
+        var carts = await _accountRepository.GetAllCartsFromCustomerId(email, cancellationToken);
+        return await _accountRepository.GetAllOrdersFromCartId(carts, email, cancellationToken);
+    }
 }
