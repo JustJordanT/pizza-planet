@@ -19,6 +19,7 @@ Pizza Planet Modern Monolith Application 🍕 🛻
 - [ASP.NET](https://dotnet.microsoft.com/en-us/apps/aspnet)
 - [FluentValidation](https://docs.fluentvalidation.net/en/latest/index.html)
 - [BCrypt - for encrypting passwords at rest](https://www.nuget.org/packages/BCrypt.Net-Next)
+- [Repository pattern](https://www.martinfowler.com/eaaCatalog/repository.html)
 - [MongoDB](https://www.mongodb.com/)
 - [JWT customer token generation](https://jwt.io/)
 
