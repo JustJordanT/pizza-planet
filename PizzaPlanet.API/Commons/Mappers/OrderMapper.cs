@@ -24,4 +24,13 @@ public static class OrderMapper
             })
             .ToList();
     }
+
+    public static PublishOrder PublishOrderId(OrderEntity orderEntity)
+    {
+        var order = new PublishOrder
+        {
+            Id = orderEntity.Id
+        };
+        return order;
+    }
 }

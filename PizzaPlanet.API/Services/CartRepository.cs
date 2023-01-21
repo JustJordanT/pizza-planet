@@ -66,6 +66,7 @@ public class CartRepository : ICartRepository
     {
         var cart = await _accountRepository.GetCartFromCustomerId(email, cancellationToken);
         await _orderRepository.UpdateOrderStatus(cart , email, cancellationToken);
+        await _orderRepository.PublishOrder(cart, email, cancellationToken);
         cart.IsActive = false;
         await _pgSqlContext.SaveChangesAsync(cancellationToken);
         

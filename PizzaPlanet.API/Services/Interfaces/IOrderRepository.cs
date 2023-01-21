@@ -8,6 +8,7 @@ public interface IOrderRepository
 {
     Task InitCustomerOrder(CreateCustomer customer, CancellationToken cancellationToken);
     Task UpdateOrderStatus(CartEntity cart,string email, CancellationToken cancellationToken);
+    Task PublishOrder(CartEntity cart,string email, CancellationToken cancellationToken);
     Task ResetOrderAsync(CartEntity cart, string email, CancellationToken cancellationToken);
     Task<IEnumerable<OrderEntity?>> GetOrdersStatusAsync(string email, CancellationToken cancellationToken); 
 }

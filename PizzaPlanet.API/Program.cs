@@ -2,6 +2,7 @@ using System.ComponentModel;
 using System.Reflection;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using PizzaPlanet.API.Commons.Validators;
 using PizzaPlanet.API.Context;
@@ -29,6 +30,31 @@ builder.Services.AddCors(options =>
             .Build()
         );
 });
+
+// MassTransit + RabbitMQ
+
+builder.Services.AddMassTransit(x =>
+{
+    x.UsingRabbitMq((context,cfg) =>
+    {
+        cfg.Host("localhost", "/", h => {
+            h.Username("guest");
+            h.Password("guest");
+        });
+
+        cfg.ConfigureEndpoints(context);
+        cfg.ReceiveEndpoint("published-orders", e =>
+        {
+            // e.ConfigureConsumer<MassApiConddsumer>(context);
+        }) ;
+    });
+    // x.AddConsumer<SubmitOrderConsumer>(typeof(SubmitOrderConsumerDefinition));
+
+    x.SetKebabCaseEndpointNameFormatter();
+
+    // x.UsingRabbitMq((context, cfg) => cfg.ConfigureEndpoints(context));
+});
+
 
 // Add the MongoDbContext to the DI container
 // builder.Services.AddSingleton<MongoDbContext>(new MongoDbContext(
