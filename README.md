@@ -42,3 +42,18 @@ graph TD;
     Orders-->|Confirmation|Customers;
 ```
 
+## Message Queue
+In our API app, we streamline the ordering process by sending orders directly to the backend kitchen for processing. This is achieved by routing orders through an exchange, and then to a consumer exchange before being added to a queue for the kitchen to efficiently handle.
+
+```mermaid
+sequenceDiagram
+API App ->> Exchange: Send Order
+Exchange ->> Consumer Exchange: Forward Order
+Consumer Exchange ->> Kitchen: Add to Queue
+Kitchen -->> Kitchen: Process Order
+Kitchen -->> Consumer Exchange: Send Order Update Status
+Consumer Exchange -->> API App: Receive Order Update Status
+```
+
+![2023-01-23_11-49-04 (1)](https://user-images.githubusercontent.com/38886930/214112488-8e2fd6ae-b3c9-4e53-bcef-8e41fd6243ac.gif)
+
