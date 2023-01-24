@@ -43,17 +43,38 @@ graph TD;
 ```
 
 ## Message Queue
-In our API app, we streamline the ordering process by sending orders directly to the backend kitchen for processing. This is achieved by routing orders through an exchange, and then to a consumer exchange before being added to a queue for the kitchen to efficiently handle.
+In our API app, we streamline the ordering process by sending orders directly to the backend kitchen for processing. This is achieved by routing orders through an exchange, then being added to a queue for the kitchen to efficiently handle. Here are some reasons why I did want to use an intermediary exchange in RabbitMQ:
+
+- Increased complexity: Adding an intermediary exchange increases the complexity of your messaging architecture, making it harder to understand and troubleshoot.
+
+- Reduced performance: Intermediary exchanges add an additional hop for messages to pass through, which can slow down the overall performance of your system.
+
+- Increased risk: Intermediary exchanges can act as a single point of failure, meaning that if they go down, your entire messaging system may be affected.
+
+- Limited scalability: Intermediary exchanges can become a bottleneck if you have a high volume of messages passing through them, limiting the scalability of your system.
+
+- Extra cost: Intermediary exchanges can add extra cost to your messaging infrastructure, as they require additional resources to operate
+
+Our MQ flow would look something like the following.
+<img width="779" alt="image" src="https://user-images.githubusercontent.com/38886930/214432241-1cb43a6b-9ff0-4e2a-abdd-629535251b6b.png">
+
+This flowchart describes a process for ordering and preparing a pizza using our APIs.
+
+1. The Pizza API sends an order to the Order Exchange.
+2. The Order Exchange adds the order to the Order Queue.
+3. The Kitchen API consumes messages from the Order Queue, and processes the order.
+4. The Kitchen API sends an update on the order's status to the Order Status Exchange.
+5. The Order Status Exchange adds the status update to the Order Status Queue
+6. The Pizza API consumes messages from the Order Status Queue to update the order status for the customer.
 
 ```mermaid
 sequenceDiagram
-API App ->> Exchange: Send Order
-Exchange ->> Consumer Exchange: Forward Order
-Consumer Exchange ->> Kitchen: Add to Queue
-Kitchen -->> Kitchen: Process Order
-Kitchen -->> Consumer Exchange: Send Order Update Status
-Consumer Exchange -->> API App: Receive Order Update Status
+Pizza API ->> Order Exchange: Send Order
+Order Exchange ->> Order Queue: Add to Queue
+Order Queue ->> Kitchen API: Consume Messages from queue
+Kitchen API -->> Kitchen API: Process Order
+Kitchen API -->> Order Status Exchange: Send Order Update Status
+Order Status Exchange -->> Order Status Queue: Add to queue
+Order Status Queue ->> Pizza API: Consume Messages from queue
 ```
-
-![2023-01-23_11-49-04 (1)](https://user-images.githubusercontent.com/38886930/214112488-8e2fd6ae-b3c9-4e53-bcef-8e41fd6243ac.gif)
 
