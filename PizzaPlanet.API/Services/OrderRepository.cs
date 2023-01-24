@@ -15,12 +15,18 @@ public class OrderRepository : IOrderRepository
     private readonly PgSqlContext _pgSqlContext;
     private readonly IAccountRepository _accountRepository;
     private readonly IPublishEndpoint _publishEndpoint;
+    private readonly ISendEndpointProvider _sendEndpoint;
 
-    public OrderRepository(PgSqlContext pgSqlContext, IAccountRepository accountRepository, IPublishEndpoint publishEndpoint)
+    public OrderRepository(
+        PgSqlContext pgSqlContext,
+        IAccountRepository accountRepository,
+        IPublishEndpoint publishEndpoint,
+        ISendEndpointProvider sendEndpoint)
     {
         _pgSqlContext = pgSqlContext ?? throw new ArgumentNullException(nameof(pgSqlContext));
         _accountRepository = accountRepository ?? throw new ArgumentNullException(nameof(accountRepository));
         _publishEndpoint = publishEndpoint;
+        _sendEndpoint = sendEndpoint;
     }
     
     public async Task InitCustomerOrder(CreateCustomer createCustomer, CancellationToken cancellationToken)
@@ -47,7 +53,8 @@ public class OrderRepository : IOrderRepository
     {
         var order = await _accountRepository.GetOrderFromCartId(cart ,email, cancellationToken);
         if (order == null) throw new ArgumentNullException(nameof(order));
-        await _publishEndpoint.Publish<PublishOrder>(OrderMapper.PublishOrderId(order), cancellationToken);
+        await _publishEndpoint.Publish(OrderMapper.PublishOrderId(order), cancellationToken);
+        // await _sendEndpoint.Send(OrderMapper.PublishOrderId(order), cancellationToken);
     }
 
 

@@ -3,16 +3,20 @@ using System.Reflection;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using MassTransit;
+// using MassTransit.Transports.Fabric;
 using Microsoft.EntityFrameworkCore;
 using PizzaPlanet.API.Commons.Validators;
 using PizzaPlanet.API.Context;
 using PizzaPlanet.API.Models;
 using PizzaPlanet.API.Services;
 using PizzaPlanet.API.Services.Interfaces;
+using PizzaPlanet.Kitchen.API.Consumers;
+using PizzaPlanet.Messages;
+using RabbitMQ.Client;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
+builder.Host.UseSerilog();
 
 builder.Services.AddControllers().AddFluentValidation(c => c.RegisterValidatorsFromAssemblies(new[] { Assembly.GetExecutingAssembly() }));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -32,35 +36,31 @@ builder.Services.AddCors(options =>
 });
 
 // MassTransit + RabbitMQ
-
 builder.Services.AddMassTransit(x =>
 {
-    x.UsingRabbitMq((context,cfg) =>
+    x.UsingRabbitMq((context, cfg) =>
     {
-        cfg.Host("localhost", "/", h => {
-            h.Username("guest");
-            h.Password("guest");
-        });
-
-        cfg.ConfigureEndpoints(context);
-        cfg.ReceiveEndpoint("published-orders", e =>
-        {
-            // e.ConfigureConsumer<MassApiConddsumer>(context);
-        }) ;
+        // cfg.ConfigureEndpoints(context);
+        // cfg.Host("localhost", "/", h =>
+        // {
+        //     h.Username();
+        //     h.Password();
+        // });
+        cfg.Message<IPublishOrder>(e => e.SetEntityName("order-service"));
+        cfg.Publish<IPublishOrder>(e => e.ExchangeType = ExchangeType.Direct);
     });
-    // x.AddConsumer<SubmitOrderConsumer>(typeof(SubmitOrderConsumerDefinition));
-
-    x.SetKebabCaseEndpointNameFormatter();
-
-    // x.UsingRabbitMq((context, cfg) => cfg.ConfigureEndpoints(context));
 });
+builder.Services.AddMassTransitHostedService();
 
+// Serilog
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Debug()
+    .WriteTo.Console()
+    .WriteTo.File("logs/logs.txt", rollingInterval: RollingInterval.Day)
+    .CreateLogger();
+Log.Information("The global logger has been configured");
 
-// Add the MongoDbContext to the DI container
-// builder.Services.AddSingleton<MongoDbContext>(new MongoDbContext(
-//     builder.Configuration["MongoDatabase:ConnectionString"],
-//     builder.Configuration["MongoDatabase:DatabaseName"]));
-
+// Ef Core Services
 builder.Services.AddDbContext<PgSqlContext>(optionsBuilder =>
     optionsBuilder.UseNpgsql(@"Server=localhost;Port=5432;Database=postgres;User Id=postgres;Password=password123"));
 
@@ -76,11 +76,6 @@ builder.Services.AddScoped<IAuthenticationRepository, AuthenticationRepository>(
 builder.Services.AddScoped<ICartRepository, CartRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
-
-// Validators
-// builder.Services.AddFluentValidation(c => c.RegisterValidatorsFromAssemblies(Assembly.GetExecutingAssembly()));
-// builder.Services.AddValidatorsFromAssemblyContaining<IAssemblyMakers>();
-// builder.Services.AddScoped<IValidator<PutPizzaModel>, PutRequestValidation>();
 
 var app = builder.Build();
 

@@ -1,5 +1,6 @@
 using PizzaPlanet.API.Entities;
 using PizzaPlanet.API.Models;
+using PizzaPlanet.Messages;
 
 namespace PizzaPlanet.API.Commons;
 
@@ -25,9 +26,9 @@ public static class OrderMapper
             .ToList();
     }
 
-    public static PublishOrder PublishOrderId(OrderEntity orderEntity)
+    public static IPublishOrder PublishOrderId(OrderEntity orderEntity)
     {
-        var order = new PublishOrder
+        var order = new IPublishOrder
         {
             Id = orderEntity.Id
         };
