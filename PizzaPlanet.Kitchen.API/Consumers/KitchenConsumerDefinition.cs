@@ -1,11 +1,12 @@
-namespace Company.Consumers
-{
-    using MassTransit;
+using MassTransit;
+using PizzaPlanet.Messages;
 
-    public class Piz :
-        ConsumerDefinition<OrderC>
+namespace PizzaPlanet.Kitchen.API.Consumers
+{
+    public class KitchenConsumerDefinition :
+        ConsumerDefinition<KitchenConsumer>
     {
-        protected override void ConfigureConsumer(IReceiveEndpointConfigurator endpointConfigurator, IConsumerConfigurator<PizzaPlanet.Kitchen.APIConsumer> consumerConfigurator)
+        protected override void ConfigureConsumer(IReceiveEndpointConfigurator endpointConfigurator, IConsumerConfigurator<KitchenConsumer> consumerConfigurator)
         {
             endpointConfigurator.UseMessageRetry(r => r.Intervals(500, 1000));
         }

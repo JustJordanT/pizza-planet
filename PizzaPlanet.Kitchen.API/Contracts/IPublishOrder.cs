@@ -2,7 +2,7 @@ using MassTransit;
 
 namespace PizzaPlanet.Messages;
 
-public class OrderConsumer : IConsumer
+public class IPublishOrder : IConsumer
 {
     public string Id { get; set; }
 }
