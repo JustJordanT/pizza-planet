@@ -22,7 +22,7 @@ public class FireOvenService : IFireOven
         //TODO Send OrderStatus back to PizzaShop
 
 
-        Task.Delay(30000);
+        await Task.Delay(20000);
         // TODO Add a entry to pizza completed table for pizza that has been completed
         await _pizzasCompletedRepository.PizzasCompleted(pizzaId, await _cooksRepository.GetRandomCookId());
         await _commonsRepository.SaveChangesAsync(new CancellationToken());

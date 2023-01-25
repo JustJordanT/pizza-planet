@@ -17,11 +17,6 @@ namespace PizzaPlanet.Kitchen.API.Consumers
             _fireOven = fireOven;
         }
 
-        // public KitchenConsumer(ILogger logger)
-        // {
-        //     _logger = logger;
-        // }
-
         public async Task Consume(ConsumeContext<IPublishOrder> context)
         {
             _logger.LogInformation("Order received with an id of: {Id} " + context.Message.Id);
@@ -29,8 +24,9 @@ namespace PizzaPlanet.Kitchen.API.Consumers
             {
               _logger.LogInformation("Pizza Id: {Id} " + pizzaId);
               await _fireOven.CookPizza(pizzaId, OrderStatus.OrderConfirmed);
+              await Task.Delay(10000);
+              await Task.CompletedTask;
             }
-            return Task.CompletedTask;
         }
     }
 }
