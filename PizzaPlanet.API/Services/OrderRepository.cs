@@ -52,8 +52,9 @@ public class OrderRepository : IOrderRepository
     public async Task PublishOrder(CartEntity cart, string email, CancellationToken cancellationToken)
     {
         var order = await _accountRepository.GetOrderFromCartId(cart ,email, cancellationToken);
+        var pizzas = await _accountRepository.GetPizzasFromCartAsync(email, cancellationToken);
         if (order == null) throw new ArgumentNullException(nameof(order));
-        await _publishEndpoint.Publish(OrderMapper.PublishOrderId(order), cancellationToken);
+        await _publishEndpoint.Publish(OrderMapper.PublishOrderId(order, pizzas), cancellationToken);
         // await _sendEndpoint.Send(OrderMapper.PublishOrderId(order), cancellationToken);
     }
 

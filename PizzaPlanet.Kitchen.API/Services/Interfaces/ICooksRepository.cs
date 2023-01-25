@@ -5,5 +5,9 @@ namespace PizzaPlanet.Kitchen.API.Services.Interfaces;
 
 public interface ICooksRepository
 {
-   Task<CooksEntity> CreateCookAsync(CreateCookModel createCook, CancellationToken cancellationToken); 
+   Task<CooksEntity> CreateCookAsync(CreateCookModel createCook, CancellationToken cancellationToken);
+   Task<bool> CooksExistAsync();
+   
+   // Gets a cook to prepare pizza
+   Task<string> GetRandomCookId();
 }

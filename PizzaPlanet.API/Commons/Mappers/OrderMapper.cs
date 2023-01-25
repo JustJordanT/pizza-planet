@@ -26,11 +26,12 @@ public static class OrderMapper
             .ToList();
     }
 
-    public static IPublishOrder PublishOrderId(OrderEntity orderEntity)
+    public static IPublishOrder PublishOrderId(OrderEntity orderEntity, List<string> pizzasIdList)
     {
         var order = new IPublishOrder
         {
-            Id = orderEntity.Id
+            Id = orderEntity.Id,
+            PizzaIds = pizzasIdList
         };
         return order;
     }

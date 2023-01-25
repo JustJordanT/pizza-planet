@@ -32,6 +32,13 @@ public class AccountRepository : IAccountRepository
       return carts.Select(z => z.Id).ToList();
    }
 
+   public async Task<List<string>> GetPizzasFromCartAsync(string email, CancellationToken cancellationToken)
+   {
+      var cart = await GetCartFromCustomerId(email, cancellationToken);
+      var pizza = await _pgSqlContext.PizzasEntity.Where(c => c.CartId == cart.Id).ToListAsync(cancellationToken);
+      return pizza.Select(p => p.Id).ToList();
+   } 
+   
    public async Task<CustomerEntity> GetCustomerByEmailAsync(string email, CancellationToken cancellationToken)
    {
       if (email == null) throw new ArgumentNullException(nameof(email));

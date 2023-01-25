@@ -26,10 +26,13 @@ builder.Services.AddDbContext<KitchenDbContext>(optionsBuilder =>
 // Repositories
 builder.Services.AddScoped<ICooksRepository, CooksRepository>();
 builder.Services.AddScoped<ICommonsRepository, CommonsRepository>();
+builder.Services.AddScoped<IPizzasCompletedRepository, PizzasCompletedRepository>();
+builder.Services.AddScoped<IFireOven, FireOvenService>();
 
 var serviceProvider = builder.Services.BuildServiceProvider();
 var logger = serviceProvider.GetService<ILogger<KitchenConsumer>>();
 builder.Services.AddSingleton(typeof(ILogger), logger);
+var fireOven = serviceProvider.GetService<IFireOven>();
 
 // MassTransit RabbitMQ Config
 
@@ -43,7 +46,7 @@ builder.Services.AddMassTransit(x =>
         // cfg.OverrideDefaultBusEndpointQueueName("order-consumer");
         cfg.ReceiveEndpoint("order-service", re =>
         {
-            re.Consumer(() => new KitchenConsumer(logger));
+            re.Consumer(() => new KitchenConsumer(logger, fireOven));
             
             // turns off default fanout settings
             re.ConfigureConsumeTopology = false;
