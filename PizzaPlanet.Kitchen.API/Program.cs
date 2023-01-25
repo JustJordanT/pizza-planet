@@ -3,7 +3,6 @@ using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using PizzaPlanet.Kitchen.API.Consumers;
 using PizzaPlanet.Kitchen.API.Context;
-using PizzaPlanet.Messages;
 using PizzaPlanet.Kitchen.API.Services;
 using PizzaPlanet.Kitchen.API.Services.Interfaces;
 using RabbitMQ.Client;

@@ -1,5 +1,4 @@
 using MassTransit;
-using PizzaPlanet.Messages;
 
 namespace PizzaPlanet.Kitchen.API.Consumers
 {

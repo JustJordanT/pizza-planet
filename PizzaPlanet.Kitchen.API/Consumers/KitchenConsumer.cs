@@ -1,8 +1,8 @@
 using MassTransit;
+using PizzaPlanet.Contracts;
 using PizzaPlanet.Kitchen.API.Commons;
 using PizzaPlanet.Kitchen.API.Services.Interfaces;
-using PizzaPlanet.Messages;
-using PizzaPlanet.Messages;
+
 
 namespace PizzaPlanet.Kitchen.API.Consumers
 {

@@ -1,6 +1,6 @@
 using MassTransit;
 
-namespace PizzaPlanet.Messages;
+namespace PizzaPlanet.Contracts;
 
 public class IPublishOrder : IConsumer
 {

@@ -1,6 +1,6 @@
 using PizzaPlanet.API.Entities;
 using PizzaPlanet.API.Models;
-using PizzaPlanet.Messages;
+using PizzaPlanet.Contracts;
 
 namespace PizzaPlanet.API.Commons;
 

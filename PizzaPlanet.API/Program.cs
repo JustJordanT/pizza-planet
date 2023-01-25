@@ -1,17 +1,11 @@
-using System.ComponentModel;
 using System.Reflection;
-using FluentValidation;
 using FluentValidation.AspNetCore;
 using MassTransit;
-// using MassTransit.Transports.Fabric;
 using Microsoft.EntityFrameworkCore;
-using PizzaPlanet.API.Commons.Validators;
 using PizzaPlanet.API.Context;
-using PizzaPlanet.API.Models;
 using PizzaPlanet.API.Services;
 using PizzaPlanet.API.Services.Interfaces;
-using PizzaPlanet.Kitchen.API.Consumers;
-using PizzaPlanet.Messages;
+using PizzaPlanet.Contracts;
 using RabbitMQ.Client;
 using Serilog;
 

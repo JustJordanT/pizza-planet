@@ -35,4 +35,8 @@
       <Folder Include="Controllers" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\PizzaPlanet.Contracts\PizzaPlanet.Contracts.csproj" />
+    </ItemGroup>
+
 </Project>
