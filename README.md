@@ -20,8 +20,12 @@ Pizza Planet Modern Monolith Application 🍕 🛻
 - [FluentValidation](https://docs.fluentvalidation.net/en/latest/index.html)
 - [BCrypt - for encrypting passwords at rest](https://www.nuget.org/packages/BCrypt.Net-Next)
 - [Repository pattern](https://www.martinfowler.com/eaaCatalog/repository.html)
-- [MongoDB](https://www.mongodb.com/)
+- [MassTransit](https://masstransit-project.com/)
+- [RabbitMQ](https://www.rabbitmq.com/)
 - [JWT customer token generation](https://jwt.io/)
+- [Pulumi Infrastructure Automation](https://www.pulumi.com/)
+- [JWT customer token generation](https://jwt.io/)
+- [PostgreSQL](https://www.postgresql.org/)
 
 ## User Flow
 
