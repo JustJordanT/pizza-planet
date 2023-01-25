@@ -55,8 +55,8 @@ In our API app, we streamline the ordering process by sending orders directly to
 
 - Extra cost: Intermediary exchanges can add extra cost to your messaging infrastructure, as they require additional resources to operate
 
-Our MQ flow would look something like the following.
-<img width="779" alt="image" src="https://user-images.githubusercontent.com/38886930/214432241-1cb43a6b-9ff0-4e2a-abdd-629535251b6b.png">
+Our MQ flows would look something like the following.
+<img width="1301" alt="image" src="https://user-images.githubusercontent.com/38886930/214488270-0fd43c3d-f660-4100-9e87-5e7722a6379c.png">
 
 This flowchart describes a process for ordering and preparing a pizza using our APIs.
 
