@@ -26,6 +26,7 @@ builder.Services.AddDbContext<KitchenDbContext>(optionsBuilder =>
 builder.Services.AddScoped<ICooksRepository, CooksRepository>();
 builder.Services.AddScoped<ICommonsRepository, CommonsRepository>();
 builder.Services.AddScoped<IPizzasCompletedRepository, PizzasCompletedRepository>();
+builder.Services.AddScoped<IOrdersCompletedRepository, OrdersCompletedRepository>();
 builder.Services.AddScoped<IFireOven, FireOvenService>();
 
 var serviceProvider = builder.Services.BuildServiceProvider();

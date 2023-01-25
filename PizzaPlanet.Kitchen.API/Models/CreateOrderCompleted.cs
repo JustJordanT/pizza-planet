@@ -4,4 +4,6 @@ public class CreateOrderCompleted
 {
     public string OrderId { get; set; }
     public string CookId { get; set; }
+
+    public string OrderStatus { get; set; }
 }

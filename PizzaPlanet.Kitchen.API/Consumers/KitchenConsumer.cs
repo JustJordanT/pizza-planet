@@ -27,6 +27,10 @@ namespace PizzaPlanet.Kitchen.API.Consumers
               await Task.Delay(10000);
               await Task.CompletedTask;
             }
+
+            await _fireOven.CompleteOrder(context.Message.Id);
+            await Task.Delay(10000);
+            await Task.CompletedTask;
         }
     }
 }

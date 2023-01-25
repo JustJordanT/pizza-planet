@@ -3,7 +3,7 @@ using PizzaPlanet.Kitchen.API.Models;
 
 namespace PizzaPlanet.Kitchen.API.Commons.Mapper;
 
-public class PizzaMapper
+public static class PizzaMapper
 {
     public static Pizzas_Completed CreatePizzasCompleted(CreatePizzasCompleted createPizzasCompleted)
     {
