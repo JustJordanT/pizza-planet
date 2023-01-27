@@ -1,6 +1,7 @@
 using System.Reflection;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
+using PizzaPlanet.Contracts;
 using PizzaPlanet.Kitchen.API.Consumers;
 using PizzaPlanet.Kitchen.API.Context;
 using PizzaPlanet.Kitchen.API.Services;
@@ -44,13 +45,26 @@ builder.Services.AddMassTransit(x =>
     {
         // cfg.ConfigureEndpoints(context);
         // cfg.OverrideDefaultBusEndpointQueueName("order-consumer");
+        cfg.Host("moose-01.rmq.cloudamqp.com", "ushbdexq", h =>
+        {
+            h.Username("ushbdexq");
+            h.Password("w7IjHDIsCAtzl1swRjMPMNhs41P1YCbg");
+        });
+        
+        // Exchange/Queue Configuration
         cfg.ReceiveEndpoint("order-service", re =>
         {
+            //Consumer configuration
             re.Consumer(() => new KitchenConsumer(logger, fireOven));
             
             // turns off default fanout settings
             re.ConfigureConsumeTopology = false;
-
+            
+            re.Bind("order-service-ex", b =>
+            {
+                b.ExchangeType = ExchangeType.Direct;
+            });
+            
             // a replicated queue to provide high availability and data safety. available in RMQ 3.8+
             re.SetQuorumQueue();
 

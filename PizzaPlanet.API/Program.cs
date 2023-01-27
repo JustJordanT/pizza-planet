@@ -34,14 +34,38 @@ builder.Services.AddMassTransit(x =>
 {
     x.UsingRabbitMq((context, cfg) =>
     {
-        // cfg.ConfigureEndpoints(context);
-        // cfg.Host("localhost", "/", h =>
-        // {
-        //     h.Username();
-        //     h.Password();
-        // });
+        cfg.ConfigureEndpoints(context);
+        cfg.Host("moose-01.rmq.cloudamqp.com", "ushbdexq", h =>
+        {
+            h.Username("ushbdexq");
+            h.Password("w7IjHDIsCAtzl1swRjMPMNhs41P1YCbg");
+        });
         cfg.Message<IPublishOrder>(e => e.SetEntityName("order-service"));
         cfg.Publish<IPublishOrder>(e => e.ExchangeType = ExchangeType.Direct);
+        
+        // Exchange/queue Configuration for order status  
+        cfg.ReceiveEndpoint("order-update-service", re =>
+        {
+            // Update configuration for consumer for Getting orders
+            // re.Consumer(() => new KitchenConsumer(logger, fireOven)); 
+            
+            // turns off default fanout settings
+            re.ConfigureConsumeTopology = false;
+            
+            re.Bind("order-update-service-ex", b =>
+            {
+                b.ExchangeType = ExchangeType.Direct;
+            });
+            
+            // a replicated queue to provide high availability and data safety. available in RMQ 3.8+
+            re.SetQuorumQueue();
+
+            // enables a lazy queue for more stable cluster with better predictive performance.
+            // Please note that you should disable lazy queues if you require really high performance, if the queues are always short, or if you have set a max-length policy.
+            re.SetQueueArgument("declare", "lazy");
+            re.ExchangeType = ExchangeType.Direct;
+        }); 
+        
     });
 });
 builder.Services.AddMassTransitHostedService();
