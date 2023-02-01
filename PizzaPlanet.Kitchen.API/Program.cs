@@ -23,12 +23,11 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<KitchenDbContext>(optionsBuilder =>
     optionsBuilder.UseNpgsql(@"Server=localhost;Port=5432;Database=postgres;User Id=postgres;Password=password123"));
 
-// Repositories
-builder.Services.AddScoped<ICooksRepository, CooksRepository>();
-builder.Services.AddScoped<ICommonsRepository, CommonsRepository>();
-builder.Services.AddScoped<IPizzasCompletedRepository, PizzasCompletedRepository>();
-builder.Services.AddScoped<IOrdersCompletedRepository, OrdersCompletedRepository>();
-builder.Services.AddScoped<IFireOven, FireOvenService>();
+builder.Services.AddTransient<IPizzasCompletedRepository, PizzasCompletedRepository>();
+builder.Services.AddTransient<ICommonsRepository, CommonsRepository>();
+builder.Services.AddTransient<ICooksRepository, CooksRepository>();
+builder.Services.AddTransient<IFireOven, FireOvenService>();
+builder.Services.AddTransient<IOrdersCompletedRepository, OrdersCompletedRepository>();
 
 var serviceProvider = builder.Services.BuildServiceProvider();
 var logger = serviceProvider.GetService<ILogger<KitchenConsumer>>();
@@ -37,45 +36,34 @@ var fireOven = serviceProvider.GetService<IFireOven>();
 
 // MassTransit RabbitMQ Config
 
-builder.Services.AddMassTransit(x =>
+builder.Services.AddMassTransit(mt =>
 {
-    // x.AddConsumer<KitchenConsumer>();
-    x.SetKebabCaseEndpointNameFormatter();
-    x.UsingRabbitMq((context, cfg) =>
+    mt.SetKebabCaseEndpointNameFormatter();
+    mt.UsingRabbitMq((context, cfg) =>
     {
-        // cfg.ConfigureEndpoints(context);
-        // cfg.OverrideDefaultBusEndpointQueueName("order-consumer");
-        cfg.Host("moose-01.rmq.cloudamqp.com", "ushbdexq", h =>
-        {
-            h.Username("ushbdexq");
-            h.Password("w7IjHDIsCAtzl1swRjMPMNhs41P1YCbg");
-        });
-        
-        // Exchange/Queue Configuration
         cfg.ReceiveEndpoint("order-service", re =>
         {
-            //Consumer configuration
-            re.Consumer(() => new KitchenConsumer(logger, fireOven));
-            
             // turns off default fanout settings
             re.ConfigureConsumeTopology = false;
-            
-            re.Bind("order-service-ex", b =>
-            {
-                b.ExchangeType = ExchangeType.Direct;
-            });
-            
+
             // a replicated queue to provide high availability and data safety. available in RMQ 3.8+
             re.SetQuorumQueue();
 
             // enables a lazy queue for more stable cluster with better predictive performance.
             // Please note that you should disable lazy queues if you require really high performance, if the queues are always short, or if you have set a max-length policy.
             re.SetQueueArgument("declare", "lazy");
+
+            re.Consumer(() => new KitchenConsumer(logger, fireOven));            
+            re.Bind("order-requests-ex", e =>
+            {
+                e.ExchangeType = ExchangeType.Direct;
+            });
             re.ExchangeType = ExchangeType.Direct;
         });
     });
-    
 });
+
+// Repositories
 
 // Serilog
 Log.Logger = new LoggerConfiguration()

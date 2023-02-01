@@ -17,6 +17,10 @@ namespace PizzaPlanet.Kitchen.API.Consumers
             _fireOven = fireOven;
         }
 
+        public KitchenConsumer()
+        {
+        }
+
         public async Task Consume(ConsumeContext<IPublishOrder> context)
         {
             _logger.LogInformation("Order received with an id of: {Id} " + context.Message.Id);
