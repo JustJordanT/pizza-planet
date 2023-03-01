@@ -30,17 +30,6 @@ builder.Services.AddCors(options =>
 });
 
 // MassTransit + RabbitMQ
-builder.Services.AddMassTransit(x =>
-{
-    x.UsingRabbitMq((context, cfg) =>
-    {
-        cfg.ConfigureEndpoints(context);
-        
-        cfg.Message<IPublishOrder>(m => m.SetEntityName("order-service"));
-        cfg.Publish<IPublishOrder>(p => p.ExchangeType = ExchangeType.Direct);
-    });
-});
-builder.Services.AddMassTransitHostedService();
 
 // Serilog
 Log.Logger = new LoggerConfiguration()

@@ -1,7 +1,6 @@
 using System.Reflection;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
-using PizzaPlanet.Contracts;
 using PizzaPlanet.Kitchen.API.Consumers;
 using PizzaPlanet.Kitchen.API.Context;
 using PizzaPlanet.Kitchen.API.Services;
@@ -41,8 +40,17 @@ builder.Services.AddMassTransit(mt =>
     mt.SetKebabCaseEndpointNameFormatter();
     mt.UsingRabbitMq((context, cfg) =>
     {
+<<<<<<< HEAD
         cfg.ReceiveEndpoint("order-service", re =>
         {
+=======
+        // cfg.ConfigureEndpoints(context);
+        // cfg.OverrideDefaultBusEndpointQueueName("order-consumer");
+        cfg.ReceiveEndpoint("order-service", re =>
+        {
+            re.Consumer(() => new KitchenConsumer(logger, fireOven));
+            
+>>>>>>> parent of 3b01aa6 (congiured exchange/queue, for order-status)
             // turns off default fanout settings
             re.ConfigureConsumeTopology = false;
 
